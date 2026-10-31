@@ -1,0 +1,75 @@
+# Manuscript Report Tool
+
+An internal tool for staff. A staff member uploads a manuscript, Copyleaks checks it, and the tool builds PDF reports in the Turnitin style layout (our own name and logo). See `docs/brief.md` and `docs/scope.md`.
+
+## Stack
+
+Decided in spec 0001 (`docs/specs/0001-stack-and-architecture/index.md`). Read it before changing the stack.
+
+- **Language / Runtime**: PHP 8.3+, TypeScript with Vue 3 (Composition API), Node 22
+- **Framework**: Laravel 13 with Inertia 3, Fortify (login only, no public sign up), Wayfinder
+- **UI**: shadcn-vue (reka-ui) with Tailwind 4
+- **Data and jobs**: MySQL 8, database queue drained by cron, private `local` disk
+- **Integrations**: official Copyleaks PHP SDK behind our own `ScanClient` interface, mPDF for PDFs (both arrive with their features)
+- **Tests**: Pest 4
+- **Package manager**: Composer and npm
+- **Hosting**: Hostinger shared or Cloud (no browser, no always running worker)
+
+## Build approach
+
+Tracer Bullet: build one thin, real thread through every layer first, then thicken it one strand at a time.
+
+## Commands
+
+```bash
+# Install and set up
+composer setup
+
+# Dev server (Herd serves http://copyleaks.test; this also runs queue and Vite)
+composer dev
+
+# Build front end
+npm run build
+
+# Test (Pest)
+php artisan test
+
+# Lint PHP / check front end / types
+composer lint && npm run check:fix
+composer types:check && npm run types:check
+
+# Everything CI would run
+composer ci:check
+```
+
+## Specs
+
+Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`. Scope is in `docs/scope.md`.
+
+## Git
+
+- integration: off
+
+## Rules
+
+- **Style**: SOLID OOP. One reason to change per class, small classes (aim under 200 lines), depend on interfaces, inject dependencies through constructors, no service locator. Prefer composition over inheritance.
+- **Folders**: keep Laravel's normal layout (`app/Http`, `app/Models`, `app/Actions`). Add `app/Services` and `app/Jobs` as needed. Vue pages live in `resources/js/pages`.
+- **Types are strict**: typed PHP signatures everywhere, PHPStan level 7, no `any` in TypeScript.
+- **Copyleaks safety**: a scan starts only from a person's upload action. Tests always use a fake `ScanClient`, so no real scan ever runs.
+- **Secrets**: Copyleaks keys live in `.env` only. Never log keys, webhook tokens or manuscript text.
+- **Tests**: Pest unit and feature tests for every feature. Tests use the in memory sqlite database set in `phpunit.xml`.
+- **Commits**: use conventional commit messages (`feat:`, `fix:`, `chore:`).
+- **Tooling** (installed by `/develop tooling`): keep the scaffold tools (Pint, PHPStan, `npm run check`). Run lint, format and types before every commit through a git hook. CI is not wanted yet, so leave `.github/workflows/tests.yml` as shipped and do not extend it.
+
+## Agent skills
+
+- [shadcn-vue](.agents/skills/shadcn-vue/): `unovue/shadcn-vue`, governs every UI component, page and `components.json` change
+
+Declined: vue-best-practices, laravel-inertia-vue, laravel-best-practices, Copyleaks MCP, MySQL MCP
+MCP servers: shadcn-vue (recommended)
+
+## Context files
+
+<!-- Nested AGENTS.md files are listed here as they are created -->
+
+_Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._
