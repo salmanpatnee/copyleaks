@@ -2,12 +2,16 @@
 
 namespace App\Providers;
 
+use App\Services\Copyleaks\CopyleaksScanClient;
+use App\Services\Copyleaks\FakeScanClient;
+use App\Services\Copyleaks\ScanClient;
 use App\Services\Manuscripts\DocxInspector;
 use App\Services\Manuscripts\ManuscriptInspector;
 use App\Services\Manuscripts\ManuscriptInspectorChain;
 use App\Services\Manuscripts\PdfInspector;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Http\Middleware\TrustProxies;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Date;
@@ -27,6 +31,12 @@ class AppServiceProvider extends ServiceProvider
             $this->app->make(PdfInspector::class),
             $this->app->make(DocxInspector::class),
         ]));
+
+        // Tests get the fake and can script it. Nothing else may ever reach Copyleaks from a test.
+        $this->app->singleton(FakeScanClient::class);
+        $this->app->bind(ScanClient::class, fn (Application $app): ScanClient => $app->environment('testing')
+            ? $app->make(FakeScanClient::class)
+            : $app->make(CopyleaksScanClient::class));
     }
 
     /**
@@ -53,6 +63,12 @@ class AppServiceProvider extends ServiceProvider
     protected function configureRateLimiting(): void
     {
         RateLimiter::for('uploads', fn (Request $request): Limit => Limit::perMinute(10)->by((string) $request->ip()));
+
+        // Submit spends credits, so it is limited tightly per address.
+        RateLimiter::for('scan-submit', fn (Request $request): Limit => Limit::perMinute(5)->by((string) $request->ip()));
+
+        // Copyleaks calls from shared addresses, so the webhook is limited per scan ID. A 429 just makes Copyleaks retry.
+        RateLimiter::for('copyleaks-webhook', fn (Request $request): Limit => Limit::perMinute(30)->by('copyleaks-webhook:'.$request->route('scanId')));
     }
 
     /**

@@ -77,6 +77,7 @@ MCP servers: shadcn-vue (recommended)
 ## Context files
 
 - [app/Models/AGENTS.md](app/Models/AGENTS.md): data model records, enums and the guards around scan status, artifacts and deletes
+- [app/Services/Copyleaks/AGENTS.md](app/Services/Copyleaks/AGENTS.md): Submit, the send job, the public webhook, resend, and the money safety rules
 - [app/Services/Manuscripts/AGENTS.md](app/Services/Manuscripts/AGENTS.md): upload screen file checks, safe store, size limits and the oversized post gotcha
 
 <!-- Nested AGENTS.md files are listed here as they are created -->

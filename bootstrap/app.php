@@ -9,6 +9,7 @@ use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Http\Middleware\AddLinkHeadersForPreloadedAssets;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -16,6 +17,10 @@ return Application::configure(basePath: dirname(__DIR__))
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
+        then: function (): void {
+            // Outside the web group on purpose: Copyleaks sends no session and no CSRF token.
+            Route::group([], base_path('routes/webhooks.php'));
+        },
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->encryptCookies(except: ['appearance', 'sidebar_state']);
@@ -35,6 +40,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $exceptions->render(fn (ThrottleRequestsException $e, Request $request): ?Response => $request->is('submissions') && $request->isMethod('post')
             ? back()->withErrors(['file' => 'Too many uploads. Please wait a minute and try again.'])
+            : null);
+
+        $exceptions->render(fn (ThrottleRequestsException $e, Request $request): ?Response => $request->is('submissions/*/scans') && $request->isMethod('post')
+            ? back()->withErrors(['scan' => 'Too many tries. Please wait a minute and try again.'])
             : null);
 
         $exceptions->shouldRenderJsonWhen(

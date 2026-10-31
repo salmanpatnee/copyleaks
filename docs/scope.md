@@ -106,16 +106,16 @@ Built as part of the upload screen, spec [0003](specs/0003-upload-screen/index.m
 
 Send the uploaded file to Copyleaks for a similarity check and an AI check, and receive the answer through a webhook. Keys stay on the server and out of logs.
 **Done when:** one upload triggers exactly one scan, the webhook delivers the result, and no scan ever runs by itself (not in loops, not in tests).
-spec [0004](specs/0004-copyleaks-scan-webhook/index.md)
+spec [0004](specs/0004-copyleaks-scan-webhook/index.md) · code in `app/Services/Copyleaks`, `app/Actions/SubmitScan.php`, `app/Actions/AcceptWebhook.php`, `app/Actions/ResendScanResult.php`, `app/Jobs/SubmitScanJob.php`, `app/Http/Controllers/ScanController.php`, `routes/webhooks.php`, `resources/js/pages/submissions/Show.vue`
 
 - [x] Design it (spec): `/architect copyleaks scan & result webhook`
 - [ ] Build it: `/develop copyleaks scan & result webhook`
-    - [ ] Client seam, then the thin thread on the fake client: Submit, send job, webhook to `fetching` (AC-2, AC-4 to AC-6, AC-8 to AC-10)
-    - [ ] Thicken the webhook: error, repeats, size check, late results (AC-8 to AC-10)
-    - [ ] Thicken the submit: retries, 15 minute deadline, Submit guards (AC-1, AC-3, AC-5, AC-7, AC-13)
-    - [ ] Resend and the real page with polling (AC-1, AC-11, AC-12)
-    - [ ] Pest tests, architecture test, one sandbox check by hand (AC-5, AC-9, AC-13, AC-14)
-- [ ] Verify it: `/check verify copyleaks scan & result webhook`
+    - [x] Client seam, then the thin thread on the fake client: Submit, send job, webhook to `fetching` (AC-2, AC-4 to AC-6, AC-8 to AC-10)
+    - [x] Thicken the webhook: error, repeats, size check, late results (AC-8 to AC-10)
+    - [x] Thicken the submit: retries, 15 minute deadline, Submit guards (AC-1, AC-3, AC-5, AC-7, AC-13)
+    - [x] Resend and the real page with polling (AC-1, AC-11, AC-12)
+    - [ ] Pest tests, architecture test, one sandbox check by hand (AC-5, AC-9, AC-13, AC-14) (tests done, the hand check is still owed)
+- [x] Verify it: `/check verify copyleaks scan & result webhook` (22 of 36 steps run live, no failures, 14 covered by tests only)
 - [ ] Test it: `/test copyleaks scan & result webhook`
 
 ### 7. Raw results storage

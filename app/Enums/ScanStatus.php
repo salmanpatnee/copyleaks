@@ -43,6 +43,24 @@ enum ScanStatus: string
         ));
     }
 
+    /** The words staff see on the saved page (AC-11). */
+    public function label(): string
+    {
+        return match ($this) {
+            self::Submitting => 'Sending',
+            self::Waiting => 'Waiting for Copyleaks',
+            self::Fetching => 'Result received',
+            self::Completed => 'Done',
+            self::Failed => 'Failed',
+        };
+    }
+
+    /** The saved page refreshes itself only while the answer is still on its way (AC-11). */
+    public function isPolling(): bool
+    {
+        return $this === self::Submitting || $this === self::Waiting;
+    }
+
     public function isTerminal(): bool
     {
         return $this->nextStates() === [];

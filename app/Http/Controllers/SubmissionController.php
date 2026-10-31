@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\StoreSubmission;
+use App\Enums\ScanStatus;
 use App\Http\Requests\StoreSubmissionRequest;
 use App\Models\Submission;
+use App\Services\Copyleaks\CopyleaksSettings;
+use App\Services\Copyleaks\DuplicateScanFinder;
+use App\Services\Copyleaks\ResendEligibility;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -32,8 +36,18 @@ class SubmissionController extends Controller
         return to_route('submissions.show', $submission);
     }
 
-    public function show(Submission $submission): Response
-    {
+    public function show(
+        Submission $submission,
+        CopyleaksSettings $settings,
+        DuplicateScanFinder $duplicateScans,
+        ResendEligibility $resend,
+    ): Response {
+        $scan = $submission->latestScan;
+
+        // The Submit panel shows for a PDF with no scan yet, or whose latest scan failed (AC-1).
+        $canSubmit = ! $submission->isWord() && ($scan === null || $scan->status === ScanStatus::Failed);
+        $scanDuplicate = $canSubmit && ! $settings->isSandbox() ? $duplicateScans->find($submission) : null;
+
         $duplicates = Submission::query()
             ->where('file_sha256', $submission->file_sha256)
             ->whereKeyNot($submission->getKey())
@@ -61,6 +75,23 @@ class SubmissionController extends Controller
                     'original_name' => $other->original_name,
                     'created_at' => $other->created_at?->toIso8601ZuluString(),
                 ])->all(),
+            ],
+            'scan' => $scan === null ? null : [
+                'status' => $scan->status->value,
+                'label' => $scan->status->label(),
+                'failure_reason' => $scan->failure_reason,
+                'ai_requested' => $scan->ai_requested,
+                'submitted_at' => $scan->submitted_at?->toIso8601ZuluString(),
+                'can_resend' => $resend->canResend($scan),
+                'is_running' => $scan->status->isRunning(),
+                'is_polling' => $scan->status->isPolling(),
+            ],
+            'can_submit' => $canSubmit,
+            'estimated_credits' => $submission->isWord() ? null : $settings->estimateCredits($submission->page_count),
+            'scan_duplicate' => $scanDuplicate === null ? null : [
+                'public_id' => $scanDuplicate->public_id,
+                'original_name' => $scanDuplicate->original_name,
+                'created_at' => $scanDuplicate->created_at?->toIso8601ZuluString(),
             ],
         ]);
     }

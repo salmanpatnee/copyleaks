@@ -41,6 +41,8 @@ class HandleInertiaRequests extends Middleware
             'auth' => [
                 'user' => $request->user(),
             ],
+            // A one time message set with ->with('notice', ...) after submit or resend.
+            'flash' => ['notice' => fn (): mixed => $request->session()->get('notice')],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
         ];
     }
