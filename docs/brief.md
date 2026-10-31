@@ -16,15 +16,15 @@ The report layout is described in [turnitin-report-design.md](turnitin-report-de
 
 ## How it is built
 
-| Part | Choice |
-|---|---|
-| Back end | Laravel 13 |
-| Front end | Vue 3 with Inertia |
-| Login | The official Laravel Vue starter kit, using Fortify (login only, invite only) |
-| UI components | shadcn-vue |
-| Document checking | Copyleaks API (a third-party service) |
-| Background work | Laravel queue, so uploads and PDF building don't make staff wait |
-| PDF output | Built by our app from our own HTML templates, following the design spec |
+| Part              | Choice                                                                        |
+| ----------------- | ----------------------------------------------------------------------------- |
+| Back end          | Laravel 13                                                                    |
+| Front end         | Vue 3 with Inertia                                                            |
+| Login             | The official Laravel Vue starter kit, using Fortify (login only, invite only) |
+| UI components     | shadcn-vue                                                                    |
+| Document checking | Copyleaks API (a third-party service)                                         |
+| Background work   | Laravel queue, so uploads and PDF building don't make staff wait              |
+| PDF output        | Built by our app from our own HTML templates, following the design spec       |
 
 ## How it works, step by step
 
@@ -33,25 +33,25 @@ The report layout is described in [turnitin-report-design.md](turnitin-report-de
 3. **Wait for the result.** Copyleaks works in the background. When it's done, it calls our app back through a webhook.
 4. **Save the raw results.** The app saves Copyleaks' replies **exactly as they arrive** (the raw JSON), along with the original file. We never change the raw data. If we improve the report later, we can rebuild old reports from what we saved.
 5. **Build the report.** The app reads the saved results and creates two PDFs:
-   - **Similarity report:** cover page, overview (match groups and top sources), then the manuscript pages with highlights and margin badges.
-   - **AI writing report:** cover page, AI overview, then the manuscript pages.
+    - **Similarity report:** cover page, overview (match groups and top sources), then the manuscript pages with highlights and margin badges.
+    - **AI writing report:** cover page, AI overview, then the manuscript pages.
 6. **Review and download.** Staff check the report in the app and download the PDF to send to the customer.
 
 ## Building the missing parts
 
 Copyleaks doesn't give us everything the Turnitin report shows. Our app has to work out or create these parts itself:
 
-| Part of the report | What Copyleaks gives us | What we build |
-|---|---|---|
+| Part of the report                                                                                  | What Copyleaks gives us                                                                                     | What we build                                                                                                                     |
+| --------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **Four match groups** (Not Cited or Quoted, Missing Quotations, Missing Citation, Cited and Quoted) | Matched text, split into identical, minor changes and paraphrased. There is no citation or quotation check. | Our own rules that sort each match into one of the four groups, for example by checking for quotation marks and nearby citations. |
-| **Source types** (Internet, Publications, Student Papers) | Internet, database and repository results, using different words | A mapping from Copyleaks' source types to our three labels. |
-| **Source names and dates**, e.g. "University of Sussex on 2025-11-13" | Often only a title or URL. Institution names and dates may be missing. | Show the best name available, and leave out the date when we don't have it. |
-| **Source rank and colors** | Source list with percentages | Rank the sources and give them the 4-color cycle from the design spec. |
-| **Margin badges and highlights** on manuscript pages | The start and end positions of matched text | Draw the highlights and badges onto the manuscript pages ourselves. |
-| **Cover page details** (submission ID, dates, page, word and character counts) | Some counts | Our own submission ID, upload and download dates, and file size. We count words and characters ourselves if needed. |
-| **Integrity flags** | Partly covered (hidden characters and similar alerts). Whether it gives positions is not confirmed. | Show the flag count and the info box. Highlight flagged text only if Copyleaks gives positions. |
-| **The "under 20%" AI rule** (show `*%` instead of the number) | An AI score | Our own decision on whether to use this rule (see open questions). |
-| **AI highlights** on manuscript pages | Positions of AI-written text | Our own highlight style, because no Turnitin sample shows it. |
+| **Source types** (Internet, Publications, Student Papers)                                           | Internet, database and repository results, using different words                                            | A mapping from Copyleaks' source types to our three labels.                                                                       |
+| **Source names and dates**, e.g. "University of Sussex on 2025-11-13"                               | Often only a title or URL. Institution names and dates may be missing.                                      | Show the best name available, and leave out the date when we don't have it.                                                       |
+| **Source rank and colors**                                                                          | Source list with percentages                                                                                | Rank the sources and give them the 4-color cycle from the design spec.                                                            |
+| **Margin badges and highlights** on manuscript pages                                                | The start and end positions of matched text                                                                 | Draw the highlights and badges onto the manuscript pages ourselves.                                                               |
+| **Cover page details** (submission ID, dates, page, word and character counts)                      | Some counts                                                                                                 | Our own submission ID, upload and download dates, and file size. We count words and characters ourselves if needed.               |
+| **Integrity flags**                                                                                 | Partly covered (hidden characters and similar alerts). Whether it gives positions is not confirmed.         | Show the flag count and the info box. Highlight flagged text only if Copyleaks gives positions.                                   |
+| **The "under 20%" AI rule** (show `*%` instead of the number)                                       | An AI score                                                                                                 | Our own decision on whether to use this rule (see open questions).                                                                |
+| **AI highlights** on manuscript pages                                                               | Positions of AI-written text                                                                                | Our own highlight style, because no Turnitin sample shows it.                                                                     |
 
 ## Phase 0: Proof of concept
 

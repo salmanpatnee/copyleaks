@@ -1,7 +1,7 @@
 # 0001. Stack and architecture for the manuscript report tool
 
 **Date**: 2026-10-31
-**Status**: Proposed
+**Status**: In Progress
 
 ## Summary
 
@@ -19,29 +19,29 @@ One deployable Laravel 13 app, with MySQL, a database queue drained by cron, loc
 
 ## Proposed stack
 
-| Layer | Choice | Reason |
-|---|---|---|
-| Architecture pattern | Monolith (one Laravel app, controllers, services, jobs) | Small internal tool, small team. Nothing here needs a second service. |
-| Language (back end) | PHP 8.3 or newer (Laravel 13 needs 8.3+; local is 8.3.19) | Matches the framework. The Hostinger PHP version must be set to 8.3 or newer. |
-| Framework | Laravel 13 | Already chosen in the scope. |
-| Language (front end) | TypeScript with Vue 3 (Composition API) | Comes with the official Laravel Vue starter kit. |
-| Front end glue | Inertia (version that the starter kit ships) | Already chosen. No separate API layer to build. |
-| UI components | shadcn-vue with Tailwind | Already chosen. Ships with the starter kit. |
-| Auth | Laravel Fortify through the starter kit, login only, no public sign up | Already chosen. Details belong to the staff login feature. |
-| Primary DB | MySQL 8 | Already installed locally, used in your other Laravel projects, and has JSON columns for raw Copyleaks replies. |
-| Background jobs | Laravel database queue, drained by cron every minute with `queue:work --stop-when-empty` | Shared hosting has no permanent worker. Volume is tiny, and a delay of up to a minute is fine for scans that take minutes. |
-| Sessions and cache | `database` and `file` drivers | No Redis on shared hosting. Nothing here needs fast cache. |
-| File storage | Laravel `local` disk, private (outside `public/`), downloads only through a signed in route | Simple. Can move to S3 later by config. |
-| Copyleaks client | Official PHP SDK `copyleaks/php-plagiarism-checker`, wrapped behind our own `ScanClient` interface | Less code to write. The interface lets tests swap in a fake so no real scan can run by accident. |
-| PDF report pages | mPDF, rendering our own HTML and CSS templates | Pure PHP, runs on shared hosting. Better font and page size support than Dompdf. Can import pages from an uploaded PDF. |
-| Manuscript pages | Import the uploaded PDF's own pages into the report (mPDF's PDF import, built on FPDI) | Keeps the original page size and look. |
-| Upload types (first version) | PDF only | Word needs a converter that shared hosting cannot run. Word comes later. |
-| Tests | Pest | Your preferred framework. Confirm the starter kit's default and align it when scaffolding. |
-| Hosting | Hostinger shared or Cloud hosting (PHP 8.3+, SSH, cron, MySQL) | Engineer's choice. See the risks in Consequences. |
-| Deployment | Build front end assets locally, push code with Git, then `composer install` and `php artisan migrate` over SSH | Shared hosting often has no Node. |
-| Local development | Laravel Herd, MySQL 8, Node 22 with npm | Already installed. |
-| Local webhook testing | Herd's built in site sharing (public HTTPS address) | Copyleaks must reach your laptop. Same flow as production. |
-| Observability | Laravel daily log files, no extra service | Internal tool. Secrets and manuscript text must never be logged. |
+| Layer                        | Choice                                                                                                         | Reason                                                                                                                     |
+| ---------------------------- | -------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| Architecture pattern         | Monolith (one Laravel app, controllers, services, jobs)                                                        | Small internal tool, small team. Nothing here needs a second service.                                                      |
+| Language (back end)          | PHP 8.3 or newer (Laravel 13 needs 8.3+; local is 8.3.19)                                                      | Matches the framework. The Hostinger PHP version must be set to 8.3 or newer.                                              |
+| Framework                    | Laravel 13                                                                                                     | Already chosen in the scope.                                                                                               |
+| Language (front end)         | TypeScript with Vue 3 (Composition API)                                                                        | Comes with the official Laravel Vue starter kit.                                                                           |
+| Front end glue               | Inertia (version that the starter kit ships)                                                                   | Already chosen. No separate API layer to build.                                                                            |
+| UI components                | shadcn-vue with Tailwind                                                                                       | Already chosen. Ships with the starter kit.                                                                                |
+| Auth                         | Laravel Fortify through the starter kit, login only, no public sign up                                         | Already chosen. Details belong to the staff login feature.                                                                 |
+| Primary DB                   | MySQL 8                                                                                                        | Already installed locally, used in your other Laravel projects, and has JSON columns for raw Copyleaks replies.            |
+| Background jobs              | Laravel database queue, drained by cron every minute with `queue:work --stop-when-empty`                       | Shared hosting has no permanent worker. Volume is tiny, and a delay of up to a minute is fine for scans that take minutes. |
+| Sessions and cache           | `database` and `file` drivers                                                                                  | No Redis on shared hosting. Nothing here needs fast cache.                                                                 |
+| File storage                 | Laravel `local` disk, private (outside `public/`), downloads only through a signed in route                    | Simple. Can move to S3 later by config.                                                                                    |
+| Copyleaks client             | Official PHP SDK `copyleaks/php-plagiarism-checker`, wrapped behind our own `ScanClient` interface             | Less code to write. The interface lets tests swap in a fake so no real scan can run by accident.                           |
+| PDF report pages             | mPDF, rendering our own HTML and CSS templates                                                                 | Pure PHP, runs on shared hosting. Better font and page size support than Dompdf. Can import pages from an uploaded PDF.    |
+| Manuscript pages             | Import the uploaded PDF's own pages into the report (mPDF's PDF import, built on FPDI)                         | Keeps the original page size and look.                                                                                     |
+| Upload types (first version) | PDF only                                                                                                       | Word needs a converter that shared hosting cannot run. Word comes later.                                                   |
+| Tests                        | Pest                                                                                                           | Your preferred framework. Confirm the starter kit's default and align it when scaffolding.                                 |
+| Hosting                      | Hostinger shared or Cloud hosting (PHP 8.3+, SSH, cron, MySQL)                                                 | Engineer's choice. See the risks in Consequences.                                                                          |
+| Deployment                   | Build front end assets locally, push code with Git, then `composer install` and `php artisan migrate` over SSH | Shared hosting often has no Node.                                                                                          |
+| Local development            | Laravel Herd, MySQL 8, Node 22 with npm                                                                        | Already installed.                                                                                                         |
+| Local webhook testing        | Herd's built in site sharing (public HTTPS address)                                                            | Copyleaks must reach your laptop. Same flow as production.                                                                 |
+| Observability                | Laravel daily log files, no extra service                                                                      | Internal tool. Secrets and manuscript text must never be logged.                                                           |
 
 ## Stack rules the build must follow
 
@@ -64,6 +64,7 @@ One deployable Laravel 13 app, with MySQL, a database queue drained by cron, loc
 - **Highlight positions are an open risk.** Copyleaks gives matches as character offsets in its own extracted text, not as positions on the PDF page. Turning offsets into page positions in pure PHP must be proven in a spike on 3 real manuscripts before the highlight features are built. **Fallback if the spike fails:** show the manuscript as re flowed text from the Copyleaks text version, with highlighted spans in mPDF. It always lines up but loses the original page look.
 
 **Configuration required**:
+
 - `COPYLEAKS_EMAIL`: account email for the Copyleaks login call
 - `COPYLEAKS_API_KEY`: Copyleaks API key
 - `COPYLEAKS_SANDBOX`: `true` or `false`
@@ -74,12 +75,14 @@ One deployable Laravel 13 app, with MySQL, a database queue drained by cron, loc
 ## Consequences
 
 **Positive**:
+
 - One app, one database, one deploy. Easy to run on a quiet Tuesday.
 - No server tools to install (no Chromium, no LibreOffice, no Redis, no Supervisor).
 - Tests cannot spend Copyleaks credits by accident.
 - A saved raw bundle plus a pure PHP renderer means old reports can be rebuilt without scanning again.
 
 **Negative / tradeoffs**:
+
 - mPDF supports less CSS than a browser. Rounded shapes, 80% opacity highlights and exact positioning in the Turnitin style layout may need workarounds. This is the biggest technical risk and goes to the Report PDF engine spec.
 - Shared or Cloud hosting limits: memory and time limits, a possible small upload size, no root access. A 75 page report may hit the memory limit.
 - Jobs wait up to about a minute for the next cron run.
@@ -87,6 +90,7 @@ One deployable Laravel 13 app, with MySQL, a database queue drained by cron, loc
 - The official SDK adds a dependency we do not control. The wrapper keeps it replaceable.
 
 **Neutral**:
+
 - Moving to a VPS later is a change in hosting only. Chromium based PDFs and a permanent worker would then become options.
 
 ## Follow-up

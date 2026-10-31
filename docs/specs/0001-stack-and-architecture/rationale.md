@@ -9,6 +9,7 @@ Build spec: [index.md](index.md)
 This is a new internal tool for staff (an empty repo with scope and design docs). Staff upload a manuscript, Copyleaks checks it, and our app saves the raw results and builds PDF reports in a Turnitin style layout with our own branding. Customers never log in.
 
 Forces that shaped the stack:
+
 - The scope already fixed Laravel 13, Vue 3 with Inertia, the Laravel Vue starter kit (Fortify), shadcn-vue and a Laravel queue.
 - Hosting is Hostinger shared or Cloud. No root access is assumed, so no Chromium, no LibreOffice, no Redis and no permanent worker.
 - Volume is low (staff uploads), but each Copyleaks scan costs credits, so accidental scans must be impossible.
@@ -24,11 +25,13 @@ Without a decision, scaffolding starts without knowing the PDF tool, the queue m
 One Laravel app. MySQL, database queue drained by cron, local private disk, mPDF for report pages, PDF import for manuscript pages, official Copyleaks PHP SDK behind our interface.
 
 **Pros**:
+
 - Fits the hosting the engineer chose, with nothing to install on the server.
 - Cheapest to run, simplest to deploy.
 - mPDF has real font, page size and header and footer support.
 
 **Cons**:
+
 - Less CSS support than a browser, so exact layout is harder and may need workarounds.
 - PDF only uploads in the first version.
 - Cron adds up to about a minute of delay to jobs.
@@ -38,11 +41,13 @@ One Laravel app. MySQL, database queue drained by cron, local private disk, mPDF
 Same app on a Hostinger VPS (or similar), HTML to PDF through headless Chromium with `spatie/laravel-pdf`, LibreOffice for Word, a Supervisor managed worker.
 
 **Pros**:
+
 - Closest match to HTML and CSS templates. Layout is easiest to get exactly right.
 - Word and PDF both supported from day one.
 - A proper permanent worker.
 
 **Cons**:
+
 - Costs more and needs server administration (updates, Chromium, LibreOffice, Supervisor).
 - More things to break that a small team must operate.
 - A small VPS costs about the same as Hostinger Cloud, so cost alone does not rule it out. Note that a VPS would not fix the highlight position problem either, because mapping Copyleaks offsets to page positions is needed with any renderer.
@@ -52,24 +57,26 @@ Same app on a Hostinger VPS (or similar), HTML to PDF through headless Chromium 
 Keep the Laravel app on shared hosting, and call a separate service (for example a Gotenberg server somewhere else) for Chromium PDFs and Word conversion.
 
 **Pros**:
+
 - Browser quality PDFs and Word support without a full VPS for the app.
 
 **Cons**:
+
 - A second system to host, secure and pay for. Manuscripts travel to another service, which adds a data handling question on top of Copyleaks.
 - More moving parts than a proof of concept needs.
 
 ### Smaller choices (each decided in the stack walk)
 
-| Layer | Chosen | Runner up |
-|---|---|---|
-| Database | MySQL 8 | PostgreSQL, SQLite |
-| Queue | Database queue | Redis, sync |
-| File storage | Private local disk | S3 compatible |
+| Layer            | Chosen                                | Runner up                                       |
+| ---------------- | ------------------------------------- | ----------------------------------------------- |
+| Database         | MySQL 8                               | PostgreSQL, SQLite                              |
+| Queue            | Database queue                        | Redis, sync                                     |
+| File storage     | Private local disk                    | S3 compatible                                   |
 | Copyleaks client | Official PHP SDK behind our interface | Laravel HTTP client wrapper (my recommendation) |
-| Tests | Pest | PHPUnit |
-| Deployment | Local build, Git push, SSH commands | FTP upload, GitHub Actions |
-| Local webhook | Herd site sharing | Expose or ngrok, polling |
-| Observability | Daily log files | Sentry or similar |
+| Tests            | Pest                                  | PHPUnit                                         |
+| Deployment       | Local build, Git push, SSH commands   | FTP upload, GitHub Actions                      |
+| Local webhook    | Herd site sharing                     | Expose or ngrok, polling                        |
+| Observability    | Daily log files                       | Sentry or similar                               |
 
 ## Rationale
 
@@ -99,11 +106,13 @@ Collected once during the design conversation. Items I could not confirm are mar
 ## References
 
 **Project sources**:
+
 - `docs/scope.md` (stack already chosen, build approach, Slice 0 rules)
 - `docs/brief.md` (workflow, rules we keep, open questions)
 - `docs/turnitin-report-design.md` (page sizes, fonts, colors, shapes that the PDF tool must reproduce)
 
 **Practices & standards**:
+
 - Monolith first for a small team
 - Database backed queue before a dedicated broker
 - Never store files in the database; keep uploads outside the public folder
@@ -111,6 +120,7 @@ Collected once during the design conversation. Items I could not confirm are mar
 - Keep third party clients behind an interface so tests never hit the real service
 
 **Links** (web verified):
+
 - Laravel 13 release notes: https://laravel.com/framework/docs/releases
 - Laravel 13 starter kits: https://laravel.com/docs/13.x/starter-kits
 - Copyleaks PHP SDK: https://docs.copyleaks.com/resources/sdks/php
