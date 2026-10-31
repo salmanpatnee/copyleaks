@@ -11,7 +11,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 | # | Feature | Phase | Status |
 |---|---------|-------|--------|
-| 1 | Stack & architecture | Foundation | planned |
+| 1 | Stack & architecture | Foundation | in-progress |
 | 2 | Coding standards & tooling | Slice 0 | planned |
 | 3 | Data model | Slice 0 | planned |
 | 4 | Upload screen | Slice 0 | planned |
@@ -41,7 +41,9 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 ### 1. Stack & architecture
 Record the stack you already chose (Laravel 13, Vue 3 with Inertia, the Laravel Vue starter kit, shadcn-vue, a Laravel queue) and install the framework and libraries so the project runs. Install only what Slice 0 needs.
 **Done when:** the stack is written down in a spec and the empty project starts locally and builds.
-- [ ] Decide the stack (spec): `/architect stack & architecture`
+spec [0001](specs/0001-stack-and-architecture/index.md)
+- [x] Decide the stack (spec): `/architect stack & architecture`
+- [ ] Scaffold from the decision: `/develop stack & architecture`
 
 ## Slice 0: Proof of concept (also the walking skeleton)
 
