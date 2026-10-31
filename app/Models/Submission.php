@@ -27,7 +27,7 @@ use Illuminate\Support\Carbon;
  * @property string $file_path
  * @property int $file_size
  * @property string $file_sha256
- * @property int $page_count
+ * @property int|null $page_count
  * @property int|null $word_count
  * @property int|null $character_count
  * @property Carbon|null $created_at
@@ -59,6 +59,12 @@ class Submission extends Model
     public function getRouteKeyName(): string
     {
         return 'public_id';
+    }
+
+    /** Word files are saved but cannot be scanned yet (spec 0003). */
+    public function isWord(): bool
+    {
+        return str_ends_with($this->file_path, '.docx');
     }
 
     /** @return BelongsTo<User, $this> */

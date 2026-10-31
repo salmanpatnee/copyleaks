@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('file_path');
             $table->unsignedBigInteger('file_size');
             $table->char('file_sha256', 64)->index();
-            $table->unsignedInteger('page_count');
+            $table->unsignedInteger('page_count')->nullable();
             $table->unsignedInteger('word_count')->nullable();
             $table->unsignedInteger('character_count')->nullable();
             $table->timestamps();

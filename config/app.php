@@ -123,4 +123,16 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Trusted Proxies
+    |--------------------------------------------------------------------------
+    |
+    | Comma separated proxy addresses (or *) when the site sits behind a proxy
+    | such as Cloudflare, so the upload throttle sees real visitor addresses.
+    |
+    */
+
+    'trusted_proxies' => env('TRUSTED_PROXIES'),
+
 ];

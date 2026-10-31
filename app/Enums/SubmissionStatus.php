@@ -10,6 +10,16 @@ enum SubmissionStatus: string
     case Done = 'done';
     case Failed = 'failed';
 
+    public function label(): string
+    {
+        return match ($this) {
+            self::NotSent => 'Not sent',
+            self::Waiting => 'Waiting',
+            self::Done => 'Done',
+            self::Failed => 'Failed',
+        };
+    }
+
     public static function fromScan(?ScanStatus $scan): self
     {
         return match ($scan) {
