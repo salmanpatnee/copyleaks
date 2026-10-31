@@ -1,115 +1,211 @@
 # Scope: Manuscript Report Tool
 
-Last updated: 2026-10-31
+An internal tool for our staff. A staff member uploads a manuscript, Copyleaks checks it for copied text and AI written text, and the tool turns the saved results into PDF reports that follow the Turnitin style layout (our own name and logo). The full brief is in [../scope.md](../scope.md) and the report layout is in [../turnitin-report-design.md](../turnitin-report-design.md).
 
-## What we are building
+**Build approach:** Tracer Bullet (build one thin, real thread through every layer first, then thicken it one strand at a time).
+**Workflow:** Beta (after build, `/check verify` then `/test`). This is the project default level of rigor. `/architect` is the recommended first stop for a feature with a real decision, but you can skip it when you already know the build. Any feature can carry its own tag (e.g. `· GA`) to do more or less.
 
-An internal tool for our staff. A staff member uploads a manuscript. The tool sends it to **Copyleaks**, which checks it for copied text (similarity) and for AI-written text. When Copyleaks finishes, the tool saves the full results and turns them into a **PDF report** that looks and reads like the Turnitin report our customers already know.
+_These are recommendations to keep your build orderly, not requirements. Skip anything that does not fit: if you already know how to build a feature, use `/develop` and skip `/architect`. You decide when a feature is `done`._
 
-The report layout is described in [turnitin-report-design.md](turnitin-report-design.md). We copy the structure and style, but we use **our own name and logo**, never Turnitin's.
+## At a glance
 
-## Who uses it
+| # | Feature | Phase | Status |
+|---|---------|-------|--------|
+| 1 | Stack & architecture | Foundation | planned |
+| 2 | Coding standards & tooling | Slice 0 | planned |
+| 3 | Data model | Slice 0 | planned |
+| 4 | Upload screen | Slice 0 | planned |
+| 5 | Cover details form | Slice 0 | planned |
+| 6 | Copyleaks scan & result webhook | Slice 0 | planned |
+| 7 | Raw results storage | Slice 0 | planned |
+| 8 | Report PDF engine | Slice 0 | planned |
+| 9 | Manuscript page rendering | Slice 0 | planned |
+| 10 | Copyleaks to report mapping | Slice 0 | planned |
+| 11 | Similarity cover page | Slice 0 | planned |
+| 12 | Similarity overview pages | Slice 0 | planned |
+| 13 | Highlights & margin badges | Slice 0 | planned |
+| 14 | Design system & UI foundation | Foundation | planned |
+| 15 | Staff login (invite only) | Slice 1 | planned |
+| 16 | Admin creates staff accounts | Slice 1 | planned |
+| 17 | Submissions list & status | Slice 2 | planned |
+| 18 | Failed scan & retry | Slice 2 | planned |
+| 19 | Match groups rules | Slice 3 | planned |
+| 20 | Source types, names & ranking | Slice 3 | planned |
+| 21 | Our own cover details | Slice 3 | planned |
+| 22 | Integrity flags | Slice 3 | planned |
+| 23 | AI writing report | Slice 4 | planned |
+| 24 | Review & download reports | Slice 5 | planned |
 
-- **Internal staff only.** It is not open to the public, and there is no sign-up.
-- Staff log in with accounts that an admin creates.
-- Customers never log in. They only receive the finished PDF from staff.
+## Foundations
 
-## How it is built
+### 1. Stack & architecture
+Record the stack you already chose (Laravel 13, Vue 3 with Inertia, the Laravel Vue starter kit, shadcn-vue, a Laravel queue) and install the framework and libraries so the project runs. Install only what Slice 0 needs.
+**Done when:** the stack is written down in a spec and the empty project starts locally and builds.
+- [ ] Decide the stack (spec): `/architect stack & architecture`
 
-| Part | Choice |
-|---|---|
-| Back end | Laravel 13 |
-| Front end | Vue 3 with Inertia |
-| Login | The official Laravel Vue starter kit, using Fortify (login only, invite only) |
-| UI components | shadcn-vue |
-| Document checking | Copyleaks API (a third-party service) |
-| Background work | Laravel queue, so uploads and PDF building don't make staff wait |
-| PDF output | Built by our app from our own HTML templates, following the design spec |
+## Slice 0: Proof of concept (also the walking skeleton)
 
-## How it works, step by step
+One real thread from upload to a finished similarity PDF. The PDF follows the layout and format in the design spec exactly (page sizes, fonts, colors, header and footer, page breaks). The content comes only from what Copyleaks gives us, placed into the matching spots of that layout. Anything Copyleaks does not give us, and that we would have to work out or invent ourselves, is left out of this slice and planned in Slice 3. Where a spot has no data, it is left out cleanly, never guessed.
 
-1. **Upload.** A staff member uploads a manuscript (Word or PDF) and fills in the cover details: author, title and assignment or class name.
-2. **Send to Copyleaks.** The app sends the file to Copyleaks for a similarity check and an AI check.
-3. **Wait for the result.** Copyleaks works in the background. When it's done, it calls our app back through a webhook.
-4. **Save the raw results.** The app saves Copyleaks' replies **exactly as they arrive** (the raw JSON), along with the original file. We never change the raw data. If we improve the report later, we can rebuild old reports from what we saved.
-5. **Build the report.** The app reads the saved results and creates two PDFs:
-   - **Similarity report:** cover page, overview (match groups and top sources), then the manuscript pages with highlights and margin badges.
-   - **AI writing report:** cover page, AI overview, then the manuscript pages.
-6. **Review and download.** Staff check the report in the app and download the PDF to send to the customer.
+Login is off in this slice. Credits are limited: use small files, never scan the same file twice, and only scan when a person clicks upload. Once a result is saved, rebuild the PDF from it instead of scanning again.
 
-## Building the missing parts
+### 2. Coding standards & tooling
+First thing after the install: capture conventions, then set up linting, formatting and checks from the real project, so all later code follows them.
+**Done when:** root `AGENTS.md` reflects the real project, and lint and format run clean.
+- [ ] Capture conventions and tooling choices: `/audit`
+- [ ] Install the tooling: `/develop tooling`
+- [ ] Check it runs clean: `/test`
 
-Copyleaks doesn't give us everything the Turnitin report shows. Our app has to work out or create these parts itself:
+### 3. Data model · needs a decision
+The core records: a submission (file, cover details, status), the raw Copyleaks replies kept exactly as received, and the finished reports. Raw data is never changed, so old reports can be rebuilt.
+**Done when:** the records support Slice 0 and every later slice without a breaking change, and raw results are stored unchanged.
+- [ ] Design it (spec): `/architect data model`
 
-| Part of the report | What Copyleaks gives us | What we build |
+### 4. Upload screen
+One simple page to upload a manuscript (Word or PDF). No login needed yet.
+**Done when:** a person can pick a small file and submit it, and the file is saved.
+- [ ] Build it: `/develop upload screen`
+
+### 5. Cover details form
+The upload form also asks for author, title and assignment or class name, which the cover page shows.
+**Done when:** a submission saves these three details, and bad input shows clear errors.
+- [ ] Build it: `/develop cover details form`
+
+### 6. Copyleaks scan & result webhook · needs a decision
+Send the uploaded file to Copyleaks for a similarity check and an AI check, and receive the answer through a webhook. Keys stay on the server and out of logs.
+**Done when:** one upload triggers exactly one scan, the webhook delivers the result, and no scan ever runs by itself (not in loops, not in tests).
+- [ ] Design it (spec): `/architect copyleaks scan & result webhook`
+
+### 7. Raw results storage
+Save every Copyleaks reply exactly as it arrives, plus the original file.
+**Done when:** the saved replies match what Copyleaks sent, and a PDF can be rebuilt from them without scanning again.
+- [ ] Build it: `/develop raw results storage`
+
+### 8. Report PDF engine · needs a decision
+Build PDFs from our own HTML templates, following the design spec: Letter pages with 36 pt side margins, Lexend Deca and Noto Sans fonts, the color tokens, the shared header and footer (`Page n of N - Section` and an ID) with our logo, and the page break rules. Font licences are still to confirm.
+**Done when:** a sample report renders with the right page sizes, margins, fonts, colors, header and footer, and uses our logo only.
+- [ ] Design it (spec): `/architect report pdf engine`
+
+### 9. Manuscript page rendering · needs a decision
+Turn the uploaded Word or PDF file into pages we can draw highlights on, keeping the original page size (A4 or Letter) and the original look.
+**Done when:** a Word file and a PDF file both appear as pages inside the report with their text positions known.
+- [ ] Design it (spec): `/architect manuscript page rendering`
+
+### 10. Copyleaks to report mapping · needs a decision
+Decide which Copyleaks field fills which spot in the Turnitin layout, using only what Copyleaks returns: the overall score, the matched text types, the source list with its percentages, and the match positions. Spots with no matching Copyleaks data are left out for now. The header and footer ID uses the Copyleaks scan ID until Slice 3.
+**Done when:** a written table shows every spot in the layout and the Copyleaks field behind it (or "left out"), and a saved result can be turned into the data the report pages need without scanning again.
+- [ ] Design it (spec): `/architect copyleaks to report mapping`
+
+### 11. Similarity cover page
+The cover page as the design spec describes it, filled with the author, title and assignment from the form, the file name, and any details Copyleaks gives us.
+**Done when:** the cover matches the design spec layout, and any detail we have no data for is left out, with no blanks or guesses.
+- [ ] Build it: `/develop similarity cover page`
+
+### 12. Similarity overview pages
+The overview pages as the design spec describes them: the overall score, the match types and the top sources from Copyleaks, laid out in the same blocks and rows. The source list flows across pages without splitting a row, and the summary block repeats on the second page.
+**Done when:** the pages match the design spec layout, and every number agrees with the saved Copyleaks result.
+- [ ] Build it: `/develop similarity overview pages`
+
+### 13. Highlights & margin badges
+Draw highlights and numbered margin badges on the manuscript pages, using the match positions Copyleaks gives us and the colors and shapes from the design spec.
+**Done when:** highlighted text lines up with the right words on every page, and badges sit in the margin without overlapping.
+- [ ] Build it: `/develop highlights & margin badges`
+
+## Foundations, continued
+
+### 14. Design system & UI foundation · needs a decision
+Base look and layout for the staff screens (built on shadcn-vue), so every screen feels the same. The report has its own look, set by the design spec.
+**Done when:** type, colors, spacing and base components are written down, and base components work with the keyboard.
+- [ ] Design it (spec): `/architect design system & UI foundation`
+
+## Slice 1: Staff access
+
+### 15. Staff login (invite only) · GA
+Staff sign in with accounts that already exist. No sign up. The upload screen and everything after it now needs login.
+**Done when:** only signed in staff reach the app, there is no public sign up, and failed logins are limited.
+- [ ] Build it: `/develop staff login`
+
+### 16. Admin creates staff accounts
+An admin creates and disables staff accounts.
+**Done when:** an admin can add and disable a staff member, and a non admin cannot.
+- [ ] Build it: `/develop admin creates staff accounts`
+
+## Slice 2: Managing submissions
+
+### 17. Submissions list & status
+A list of submissions showing waiting, done or failed.
+**Done when:** staff see every submission with its current status, and the status updates when Copyleaks answers.
+- [ ] Build it: `/develop submissions list & status`
+
+### 18. Failed scan & retry
+When Copyleaks fails, mark the submission failed with the reason, and let staff try again. Never show a score we do not have.
+**Done when:** a failed scan shows its reason, and retry works without creating a duplicate submission.
+- [ ] Build it: `/develop failed scan & retry`
+
+## Slice 3: Fill the report gaps (the parts Copyleaks does not give us)
+
+These are the "missing parts" from the brief. Each one replaces a spot that Slice 0 left out or filled with plain Copyleaks data.
+
+### 19. Match groups rules · needs a decision
+Our own rules that sort each match into the four groups (Not Cited or Quoted, Missing Quotations, Missing Citation, Cited and Quoted), for example by looking for quotation marks and nearby citations.
+**Done when:** every match lands in exactly one group, the rules are written down and tested on sample text, and the overview and highlights use the four groups and their colors.
+- [ ] Design it (spec): `/architect match groups rules`
+
+### 20. Source types, names & ranking · needs a decision
+Map Copyleaks source types to our three labels (Internet, Publications, Student Papers), show the best name we have (no date when missing), rank the sources, and give them the four color cycle.
+**Done when:** each source has a label, a name, a rank and a color, and missing names or dates never break the page.
+- [ ] Design it (spec): `/architect source types, names & ranking`
+
+### 21. Our own cover details
+Our own submission ID, upload and download dates, file size, and page, word and character counts (counted ourselves where Copyleaks does not give them), shown on the cover and in the header and footer.
+**Done when:** the cover shows every detail from the design spec, and the header and footer use our own submission ID.
+- [ ] Build it: `/develop our own cover details`
+
+### 22. Integrity flags · needs a decision
+Show the flag count and the info box. Highlight flagged text only if Copyleaks confirms it gives positions.
+**Done when:** the flag count is shown correctly, and text is highlighted only when positions exist.
+- [ ] Design it (spec): `/architect integrity flags`
+
+## Slice 4: AI writing report
+
+### 23. AI writing report · needs a decision
+Cover page, AI overview and manuscript pages with AI highlights in our own style, reusing the report engine from Slice 0. Includes the decision on the "under 20%" rule (show `*%` instead of a number) and whether customers see AI scores at all.
+**Done when:** an AI report builds from saved data, shows the score by the rule we picked, and highlights AI written text.
+- [ ] Design it (spec): `/architect ai writing report`
+
+## Slice 5: Review and download
+
+### 24. Review & download reports
+Staff open a finished submission, check the report on screen, and download either PDF to send to the customer.
+**Done when:** staff can view and download both PDFs for a finished submission, and the files are only reachable when signed in.
+- [ ] Build it: `/develop review & download reports`
+
+## Deferred
+Out of scope for the first version, kept so the plan stays honest.
+- **Staff approval before download**: each report approved before it can be downloaded · needs a decision
+- **Customer accounts or portal**: customers log in and see their reports · needs a decision · GA
+- **Emailing reports to customers**: send the PDF automatically · needs a decision
+- **Payments and billing**: charge for reports · needs a decision · GA
+- **Editing results by hand**: staff change results before the report · needs a decision
+- **Other report styles**: anything besides the Turnitin style layout · needs a decision
+
+## Legend
+
+**The decision box.** Every feature carries exactly one, the sub task whose label ends with `(spec)`. Its wording varies (`Design it (spec)` normally, `Decide the stack (spec)` on Stack & architecture), so skills find it by that `(spec)` suffix. Every other box is an execution box and `/architect` never ticks one.
+
+**Feature lifecycle**: the scope updates as a feature moves.
+
+| State | Set by | The feature shows |
 |---|---|---|
-| **Four match groups** (Not Cited or Quoted, Missing Quotations, Missing Citation, Cited and Quoted) | Matched text, split into identical, minor changes and paraphrased. There is no citation or quotation check. | Our own rules that sort each match into one of the four groups, for example by checking for quotation marks and nearby citations. |
-| **Source types** (Internet, Publications, Student Papers) | Internet, database and repository results, using different words | A mapping from Copyleaks' source types to our three labels. |
-| **Source names and dates**, e.g. "University of Sussex on 2025-11-13" | Often only a title or URL. Institution names and dates may be missing. | Show the best name available, and leave out the date when we don't have it. |
-| **Source rank and colors** | Source list with percentages | Rank the sources and give them the 4-color cycle from the design spec. |
-| **Margin badges and highlights** on manuscript pages | The start and end positions of matched text | Draw the highlights and badges onto the manuscript pages ourselves. |
-| **Cover page details** (submission ID, dates, page, word and character counts) | Some counts | Our own submission ID, upload and download dates, and file size. We count words and characters ourselves if needed. |
-| **Integrity flags** | Partly covered (hidden characters and similar alerts). Whether it gives positions is not confirmed. | Show the flag count and the info box. Highlight flagged text only if Copyleaks gives positions. |
-| **The "under 20%" AI rule** (show `*%` instead of the number) | An AI score | Our own decision on whether to use this rule (see open questions). |
-| **AI highlights** on manuscript pages | Positions of AI-written text | Our own highlight style, because no Turnitin sample shows it. |
+| `planned` · needs a decision | `/scope` | one box: `Design it (spec): /architect <feature>` |
+| `in-progress` (designed) | `/architect` at spec capture | `Design it` ticked; spec linked; `Build it: /develop <feature>` with 2 to 5 milestones; the tier's closing boxes (`Verify it`, `Test it`) |
+| `in-progress` (building) | `/develop` | milestone boxes tick one by one; code pointer filled |
+| `in-progress` (verified) | `/check verify` | `Build it` and milestones ticked; `Verify it` ticked |
+| `done` | you, when you decide it is | boxes you ran ticked, skipped ones marked skipped; at Beta the suggested point is after `/test` |
 
-## Phase 0: Proof of concept
-
-Before we build the real tool, we build a proof of concept. It shows that the whole flow works from start to finish: upload, then Copyleaks, then saved results, then a PDF. If the results are what we want, we build the tool properly.
-
-**What we build:**
-
-1. **Install** Laravel with the Vue starter kit (Fortify), shadcn-vue and the tooling that comes with the starter kit (such as linting and formatting). We install them now so they are ready later, but we don't depend on them in this phase.
-2. **Upload screen.** One simple page to upload a manuscript.
-3. **Copyleaks processing.** Back-end code that sends the file to Copyleaks and receives the result.
-4. **Save the results.** Store the raw Copyleaks results exactly as they arrive.
-5. **Generate a PDF.** Build a simple PDF straight from the raw results.
-
-**What we do not build in this phase:**
-
-- No login or accounts. Fortify is installed, but the upload screen doesn't require login yet.
-- No extra tooling work. The tools are installed, but we don't spend time setting up rules, CI or checks yet.
-- None of the missing parts listed in "Building the missing parts". No match groups, source mapping, highlights, badges or Turnitin-style layout yet.
-
-**Using credits carefully:**
-
-- We only have limited credits in the Copyleaks sandbox, so every scan counts.
-- Use small test files.
-- Don't send the same file twice. Once a result is saved, reuse it to test and rebuild the PDF instead of scanning again.
-- Never run scans automatically, in loops or in tests. Only scan when a person clicks upload.
-
-## What is in the first version
-
-- Staff login (invite only), with an admin who creates the accounts
-- Upload a manuscript and enter its cover details
-- Send it to Copyleaks and receive the result through the webhook
-- Save the raw results and the original file
-- A list of submissions with their status: waiting, done or failed
-- Similarity PDF and AI PDF, following the design spec
-- Download the PDFs
-
-## What is not in the first version
-
-- Customer accounts or a customer portal
-- Emailing reports to customers automatically
-- Payments or billing
-- Editing results by hand
-- Any report style other than the Turnitin-like layout
-
-## Rules we keep
-
-- Copyleaks API keys stay on the server. They are never sent to the browser and never written to logs.
-- Raw Copyleaks results are saved unchanged. The report is always built from the saved data.
-- If Copyleaks fails, the submission is marked "failed" with the reason, and staff can try again. We never show a score we don't have.
-- Keep it simple. Build the smallest thing that works.
-
-## Open questions
-
-- **Price:** what is the Copyleaks API price per page, and are there minimums? Copyleaks counts one page as every 250 words.
-- **AI billing:** is the AI check billed on top of the similarity check?
-- **Data use:** does Copyleaks use our documents for training or keep them in a shared index? How long does it keep them?
-- **Branding:** may we put Copyleaks results in our own branded report?
-- **Approval:** should staff approve each report before it goes to a customer?
-- **AI scores:** should customers see AI scores at all? Should we copy the "under 20%" rule?
-- **Legal:** how closely can we copy the Turnitin report design?
-- **Fonts:** confirm the licences for Lexend Deca and Noto Sans.
+- **Next step** is the first unticked box (always a command or a tracked milestone).
+- **needs a decision** means run `/architect` first; otherwise go straight to `/develop` (or `/audit` for standards and tooling). The tag drops once the spec is captured.
+- **Atomic build tasks live in the spec's `## Build plan`**, not here. The scope carries only the milestone rollup.
+- **Status** goes `planned` to `in-progress` to `done`, plus `existing` (built before the workflow) and `dropped` (de-scoped, kept for history).
+- **Workflow tier tag** beside a heading (e.g. `· GA`) sets that one feature's rigor above or below the project default. No tag means it follows the default.
+- **Pointer line** (`spec <n> · code in <path>`) appears once a spec or code exists.
