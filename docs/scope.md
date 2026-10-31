@@ -16,7 +16,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 3   | Data model                      | Slice 0    | done        |
 | 4   | Upload screen                   | Slice 0    | in-progress |
 | 5   | Cover details form              | Slice 0    | done        |
-| 6   | Copyleaks scan & result webhook | Slice 0    | planned     |
+| 6   | Copyleaks scan & result webhook | Slice 0    | in-progress |
 | 7   | Raw results storage             | Slice 0    | planned     |
 | 8   | Report PDF engine               | Slice 0    | planned     |
 | 9   | Manuscript page rendering       | Slice 0    | planned     |
@@ -102,12 +102,21 @@ Built as part of the upload screen, spec [0003](specs/0003-upload-screen/index.m
 
 - [x] Covered by the upload screen (no separate spec or build needed)
 
-### 6. Copyleaks scan & result webhook · needs a decision
+### 6. Copyleaks scan & result webhook
 
 Send the uploaded file to Copyleaks for a similarity check and an AI check, and receive the answer through a webhook. Keys stay on the server and out of logs.
 **Done when:** one upload triggers exactly one scan, the webhook delivers the result, and no scan ever runs by itself (not in loops, not in tests).
+spec [0004](specs/0004-copyleaks-scan-webhook/index.md)
 
-- [ ] Design it (spec): `/architect copyleaks scan & result webhook`
+- [x] Design it (spec): `/architect copyleaks scan & result webhook`
+- [ ] Build it: `/develop copyleaks scan & result webhook`
+    - [ ] Client seam, then the thin thread on the fake client: Submit, send job, webhook to `fetching` (AC-2, AC-4 to AC-6, AC-8 to AC-10)
+    - [ ] Thicken the webhook: error, repeats, size check, late results (AC-8 to AC-10)
+    - [ ] Thicken the submit: retries, 15 minute deadline, Submit guards (AC-1, AC-3, AC-5, AC-7, AC-13)
+    - [ ] Resend and the real page with polling (AC-1, AC-11, AC-12)
+    - [ ] Pest tests, architecture test, one sandbox check by hand (AC-5, AC-9, AC-13, AC-14)
+- [ ] Verify it: `/check verify copyleaks scan & result webhook`
+- [ ] Test it: `/test copyleaks scan & result webhook`
 
 ### 7. Raw results storage
 
