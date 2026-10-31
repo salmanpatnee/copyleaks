@@ -57,10 +57,12 @@ Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`. Scope is in `docs/s
 
 - **Style**: SOLID OOP. One reason to change per class, small classes (aim under 200 lines), depend on interfaces, inject dependencies through constructors, no service locator. Prefer composition over inheritance.
 - **Folders**: keep Laravel's normal layout (`app/Http`, `app/Models`, `app/Actions`). Add `app/Services` and `app/Jobs` as needed. Vue pages live in `resources/js/pages`.
+- **More folders in use**: `app/Enums` (backed enums) and `app/Exceptions` (domain exceptions).
 - **Types are strict**: typed PHP signatures everywhere, PHPStan level 7, no `any` in TypeScript.
 - **Copyleaks safety**: a scan starts only from a person's upload action. Tests always use a fake `ScanClient`, so no real scan ever runs.
 - **Secrets**: Copyleaks keys live in `.env` only. Never log keys, webhook tokens or manuscript text.
 - **Tests**: Pest unit and feature tests for every feature. Tests use the in memory sqlite database set in `phpunit.xml`.
+- **Test style**: new tests are Pest function style, with `uses(TestCase::class, RefreshDatabase::class);` at the top of each database test file (there is no `tests/Pest.php`).
 - **Commits**: use conventional commit messages (`feat:`, `fix:`, `chore:`).
 - **Tooling** (installed by `/develop tooling`): keep the scaffold tools (Pint, PHPStan, `npm run check`). Run lint, format and types before every commit through a git hook. CI is not wanted yet, so leave `.github/workflows/tests.yml` as shipped and do not extend it.
 
@@ -72,6 +74,8 @@ Declined: vue-best-practices, laravel-inertia-vue, laravel-best-practices, Copyl
 MCP servers: shadcn-vue (recommended)
 
 ## Context files
+
+- [app/Models/AGENTS.md](app/Models/AGENTS.md): data model records, enums and the guards around scan status, artifacts and deletes
 
 <!-- Nested AGENTS.md files are listed here as they are created -->
 
