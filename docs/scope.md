@@ -15,7 +15,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 2   | Coding standards & tooling      | Slice 0    | done        |
 | 3   | Data model                      | Slice 0    | done        |
 | 4   | Upload screen                   | Slice 0    | in-progress |
-| 5   | Cover details form              | Slice 0    | planned     |
+| 5   | Cover details form              | Slice 0    | done        |
 | 6   | Copyleaks scan & result webhook | Slice 0    | planned     |
 | 7   | Raw results storage             | Slice 0    | planned     |
 | 8   | Report PDF engine               | Slice 0    | planned     |
@@ -98,8 +98,9 @@ spec [0003](specs/0003-upload-screen/index.md) · code in `app/Http/Controllers/
 
 The upload form also asks for author, title and assignment or class name, which the cover page shows.
 **Done when:** a submission saves these three details, and bad input shows clear errors.
+Built as part of the upload screen, spec [0003](specs/0003-upload-screen/index.md) (AC-1, AC-5, AC-8, AC-10) · code in `app/Http/Requests/StoreSubmissionRequest.php`, `resources/js/pages/submissions/Create.vue`
 
-- [ ] Build it: `/develop cover details form`
+- [x] Covered by the upload screen (no separate spec or build needed)
 
 ### 6. Copyleaks scan & result webhook · needs a decision
 
