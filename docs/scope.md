@@ -13,7 +13,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | --- | ------------------------------- | ---------- | ----------- |
 | 1   | Stack & architecture            | Foundation | done |
 | 2   | Coding standards & tooling      | Slice 0    | done        |
-| 3   | Data model                      | Slice 0    | planned     |
+| 3   | Data model                      | Slice 0    | in-progress |
 | 4   | Upload screen                   | Slice 0    | planned     |
 | 5   | Cover details form              | Slice 0    | planned     |
 | 6   | Copyleaks scan & result webhook | Slice 0    | planned     |
@@ -63,12 +63,20 @@ code in `.githooks/`, `composer.json`, `vite.config.ts`
 - [x] Install the tooling: `/develop tooling`
 - [x] Check it runs clean: `/test`
 
-### 3. Data model · needs a decision
+### 3. Data model
 
 The core records: a submission (file, cover details, status), the raw Copyleaks replies kept exactly as received, and the finished reports. Raw data is never changed, so old reports can be rebuilt.
 **Done when:** the records support Slice 0 and every later slice without a breaking change, and raw results are stored unchanged.
+spec [0002](specs/0002-data-model.md)
 
-- [ ] Design it (spec): `/architect data model`
+- [x] Design it (spec): `/architect data model`
+- [ ] Build it: `/develop data model`
+    - [ ] Migration for the five tables (AC-1 to AC-9)
+    - [ ] Enums, guarded status changes (`ScanTransitioner`), models and factories (AC-2, AC-3, AC-5, AC-10, AC-11)
+    - [ ] Pest tests for constraints, cascades, transitions and rebuild safety (AC-4 to AC-8, AC-11, AC-12)
+    - [ ] Schema check against Slices 1 to 5 (AC-9)
+- [ ] Verify it: `/check verify data model`
+- [ ] Test it: `/test data model`
 
 ### 4. Upload screen
 
