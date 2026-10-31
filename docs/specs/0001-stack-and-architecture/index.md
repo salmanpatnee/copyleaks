@@ -1,7 +1,7 @@
 # 0001. Stack and architecture for the manuscript report tool
 
 **Date**: 2026-10-31
-**Status**: In Progress
+**Status**: Accepted
 
 ## Summary
 

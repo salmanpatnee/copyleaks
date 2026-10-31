@@ -11,7 +11,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 
 | #   | Feature                         | Phase      | Status      |
 | --- | ------------------------------- | ---------- | ----------- |
-| 1   | Stack & architecture            | Foundation | in-progress |
+| 1   | Stack & architecture            | Foundation | done |
 | 2   | Coding standards & tooling      | Slice 0    | planned     |
 | 3   | Data model                      | Slice 0    | planned     |
 | 4   | Upload screen                   | Slice 0    | planned     |
