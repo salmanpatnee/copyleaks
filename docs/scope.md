@@ -14,7 +14,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 1   | Stack & architecture            | Foundation | done |
 | 2   | Coding standards & tooling      | Slice 0    | done        |
 | 3   | Data model                      | Slice 0    | done        |
-| 4   | Upload screen                   | Slice 0    | planned     |
+| 4   | Upload screen                   | Slice 0    | in-progress |
 | 5   | Cover details form              | Slice 0    | planned     |
 | 6   | Copyleaks scan & result webhook | Slice 0    | planned     |
 | 7   | Raw results storage             | Slice 0    | planned     |
@@ -82,8 +82,17 @@ spec [0002](specs/0002-data-model/index.md) · code in `app/Models`, `app/Enums`
 
 One simple page to upload a manuscript (Word or PDF). No login needed yet.
 **Done when:** a person can pick a small file and submit it, and the file is saved.
+spec [0003](specs/0003-upload-screen.md)
 
+- [x] Design it (spec): `/architect upload screen`
 - [ ] Build it: `/develop upload screen`
+    - [ ] Thin thread: PDF in, file and row saved, saved page shown (AC-1, AC-5, AC-8)
+    - [ ] File checks: PDF and Word inspectors, size and page limits, clear errors (AC-2, AC-3, AC-4, AC-10)
+    - [ ] Safe store, duplicate warning and upload limits (AC-6, AC-7, AC-9)
+    - [ ] Real pages with shadcn-vue, `/` redirect and throttle (AC-8, AC-10, AC-11)
+    - [ ] Pest tests and fixtures (AC-1 to AC-11)
+- [ ] Verify it: `/check verify upload screen`
+- [ ] Test it: `/test upload screen`
 
 ### 5. Cover details form
 
