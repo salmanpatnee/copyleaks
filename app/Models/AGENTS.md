@@ -33,10 +33,12 @@ The records behind the tool: a submission (the upload and its cover details) has
 - Database cascade does not remove files. Delete through `DeleteSubmission`, which also refuses while a scan is running.
 - `scans.webhook_token_hash` is hidden and must never be logged or sent to the browser.
 - Same file checksum on many submissions is allowed on purpose (a plain index, not unique).
+- `submissions.page_count` is null for Word files (unknown). `Submission::isWord()` tells them apart. Handle null in every feature that reads it.
 - Tests use in memory sqlite with foreign keys on. Keep the cascade test that fails if they are off.
 
 ## Related specs
 
 - [0002 data model](../../docs/specs/0002-data-model/index.md)
+- [0003 upload screen](../../docs/specs/0003-upload-screen/index.md)
 
 _Drafted by /audit from the repo, worth a quick human pass. Edit freely: once a line stops matching this draft, later runs treat it as curated and will flag rather than overwrite it._

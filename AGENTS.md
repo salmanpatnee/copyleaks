@@ -11,6 +11,7 @@ Decided in spec 0001 (`docs/specs/0001-stack-and-architecture/index.md`). Read i
 - **UI**: shadcn-vue (reka-ui) with Tailwind 4
 - **Data and jobs**: MySQL 8, database queue drained by cron, private `local` disk
 - **Integrations**: official Copyleaks PHP SDK behind our own `ScanClient` interface, mPDF for PDFs (both arrive with their features)
+- **PDF reading**: `smalot/pdfparser` for page counts and the encrypted check on upload (installed with spec 0003)
 - **Tests**: Pest 4
 - **Package manager**: Composer and npm
 - **Hosting**: Hostinger shared or Cloud (no browser, no always running worker)
@@ -31,7 +32,7 @@ composer dev
 # Build front end
 npm run build
 
-# Test (Pest)
+# Test (Pest). After adding or renaming a Vue page, run `npm run build` first: the page tests read public/build
 php artisan test
 
 # Lint PHP / check front end / types
@@ -76,6 +77,7 @@ MCP servers: shadcn-vue (recommended)
 ## Context files
 
 - [app/Models/AGENTS.md](app/Models/AGENTS.md): data model records, enums and the guards around scan status, artifacts and deletes
+- [app/Services/Manuscripts/AGENTS.md](app/Services/Manuscripts/AGENTS.md): upload screen file checks, safe store, size limits and the oversized post gotcha
 
 <!-- Nested AGENTS.md files are listed here as they are created -->
 
