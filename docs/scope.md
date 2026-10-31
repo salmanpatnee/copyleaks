@@ -1,6 +1,6 @@
 # Scope: Manuscript Report Tool
 
-An internal tool for our staff. A staff member uploads a manuscript, Copyleaks checks it for copied text and AI written text, and the tool turns the saved results into PDF reports that follow the Turnitin style layout (our own name and logo). The full brief is in [../scope.md](../scope.md) and the report layout is in [../turnitin-report-design.md](../turnitin-report-design.md).
+An internal tool for our staff. A staff member uploads a manuscript, Copyleaks checks it for copied text and AI written text, and the tool turns the saved results into PDF reports that follow the Turnitin style layout (our own name and logo). The full brief is in [brief.md](brief.md) and the report layout is in [turnitin-report-design.md](turnitin-report-design.md).
 
 **Build approach:** Tracer Bullet (build one thin, real thread through every layer first, then thicken it one strand at a time).
 **Workflow:** Beta (after build, `/check verify` then `/test`). This is the project default level of rigor. `/architect` is the recommended first stop for a feature with a real decision, but you can skip it when you already know the build. Any feature can carry its own tag (e.g. `· GA`) to do more or less.
