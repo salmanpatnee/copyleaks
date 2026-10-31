@@ -40,6 +40,9 @@ composer types:check && npm run types:check
 
 # Everything CI would run
 composer ci:check
+
+# Turn on the pre-commit check (also runs inside composer setup)
+composer hooks:install
 ```
 
 ## Specs

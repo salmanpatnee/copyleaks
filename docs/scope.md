@@ -59,7 +59,7 @@ First thing after the install: capture conventions, then set up linting, formatt
 **Done when:** root `AGENTS.md` reflects the real project, and lint and format run clean.
 code in `.githooks/`, `composer.json`, `vite.config.ts`
 
-- [ ] Capture conventions and tooling choices: `/audit`
+- [x] Capture conventions and tooling choices: `/audit`
 - [x] Install the tooling: `/develop tooling`
 - [ ] Check it runs clean: `/test`
 
