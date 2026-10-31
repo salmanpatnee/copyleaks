@@ -61,7 +61,7 @@ code in `.githooks/`, `composer.json`, `vite.config.ts`
 
 - [x] Capture conventions and tooling choices: `/audit`
 - [x] Install the tooling: `/develop tooling`
-- [ ] Check it runs clean: `/test`
+- [x] Check it runs clean: `/test`
 
 ### 3. Data model · needs a decision
 
