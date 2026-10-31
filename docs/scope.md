@@ -12,7 +12,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | #   | Feature                         | Phase      | Status      |
 | --- | ------------------------------- | ---------- | ----------- |
 | 1   | Stack & architecture            | Foundation | done |
-| 2   | Coding standards & tooling      | Slice 0    | planned     |
+| 2   | Coding standards & tooling      | Slice 0    | in-progress |
 | 3   | Data model                      | Slice 0    | planned     |
 | 4   | Upload screen                   | Slice 0    | planned     |
 | 5   | Cover details form              | Slice 0    | planned     |
@@ -57,9 +57,10 @@ Login is off in this slice. Credits are limited: use small files, never scan the
 
 First thing after the install: capture conventions, then set up linting, formatting and checks from the real project, so all later code follows them.
 **Done when:** root `AGENTS.md` reflects the real project, and lint and format run clean.
+code in `.githooks/`, `composer.json`, `vite.config.ts`
 
 - [ ] Capture conventions and tooling choices: `/audit`
-- [ ] Install the tooling: `/develop tooling`
+- [x] Install the tooling: `/develop tooling`
 - [ ] Check it runs clean: `/test`
 
 ### 3. Data model · needs a decision

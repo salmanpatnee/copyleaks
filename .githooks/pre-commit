@@ -1,0 +1,22 @@
+#!/bin/sh
+# Runs before every commit. Stops the commit if lint, format or types fail.
+# Installed by `composer hooks:install` (part of `composer setup`).
+
+fail() {
+    echo ""
+    echo "Commit stopped: $1 failed."
+    echo "Fix it with: composer lint && npm run check:fix"
+    exit 1
+}
+
+echo "pre-commit: PHP style (Pint)"
+composer lint:check --no-interaction || fail "PHP style check"
+
+echo "pre-commit: PHP types (PHPStan)"
+composer types:check --no-interaction || fail "PHP type check"
+
+echo "pre-commit: front end lint and format"
+npm run check --silent || fail "front end check"
+
+echo "pre-commit: front end types"
+npm run types:check --silent || fail "front end type check"
