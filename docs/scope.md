@@ -116,7 +116,7 @@ spec [0004](specs/0004-copyleaks-scan-webhook/index.md) · code in `app/Services
     - [x] Resend and the real page with polling (AC-1, AC-11, AC-12)
     - [ ] Pest tests, architecture test, one sandbox check by hand (AC-5, AC-9, AC-13, AC-14) (tests done, the hand check is still owed)
 - [x] Verify it: `/check verify copyleaks scan & result webhook` (22 of 36 steps run live, no failures, 14 covered by tests only)
-- [ ] Test it: `/test copyleaks scan & result webhook`
+- [x] Test it: `/test copyleaks scan & result webhook` (145 passed, all 14 AC covered)
 
 ### 7. Raw results storage
 
