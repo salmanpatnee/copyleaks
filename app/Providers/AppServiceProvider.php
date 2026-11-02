@@ -69,6 +69,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Copyleaks calls from shared addresses, so the webhook is limited per scan ID. A 429 just makes Copyleaks retry.
         RateLimiter::for('copyleaks-webhook', fn (Request $request): Limit => Limit::perMinute(30)->by('copyleaks-webhook:'.$request->route('scanId')));
+
+        // A scan can have hundreds of result files pushed at once, so the export addresses get a wider limit (spec 0005).
+        RateLimiter::for('copyleaks-export', fn (Request $request): Limit => Limit::perMinute(600)->by('copyleaks-export:'.$request->route('scanId')));
     }
 
     /**

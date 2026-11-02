@@ -48,10 +48,14 @@ class ScanTransitioner
         return $this->move($scan, ScanStatus::Fetching);
     }
 
-    /** All artifacts are saved. */
-    public function markCompleted(Scan $scan): bool
+    /**
+     * All artifacts are saved.
+     *
+     * @param  array<string, mixed>  $attributes  extra columns set in the same update, such as the scores
+     */
+    public function markCompleted(Scan $scan, array $attributes = []): bool
     {
-        return $this->move($scan, ScanStatus::Completed, ['completed_at' => now()]);
+        return $this->move($scan, ScanStatus::Completed, ['completed_at' => now(), ...$attributes]);
     }
 
     /** The reason is an error code and message, or our own text. Never manuscript text or secrets. */

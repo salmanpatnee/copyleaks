@@ -9,12 +9,11 @@ use App\Events\ScanResultsArrived;
 use App\Models\Scan;
 use App\Models\ScanArtifact;
 use App\Models\ScanEvent;
+use App\Services\Copyleaks\RawFileWriter;
 use App\Services\ScanTransitioner;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 /**
  * Handles one valid webhook call (AC-9, AC-10). Calls nothing at Copyleaks.
@@ -26,13 +25,16 @@ use Illuminate\Support\Str;
  */
 class AcceptWebhook
 {
-    public function __construct(private readonly ScanTransitioner $transitioner) {}
+    public function __construct(
+        private readonly ScanTransitioner $transitioner,
+        private readonly RawFileWriter $writer,
+    ) {}
 
     /** @param  array<string, mixed>  $body  the decoded JSON of $rawBody */
     public function __invoke(Scan $scan, string $status, string $rawBody, array $body): void
     {
         $isCompleted = $status === 'completed';
-        $summary = $isCompleted ? $this->saveSummaryFile($scan, $rawBody) : null;
+        $summary = $isCompleted ? $this->writer->store("scans/{$scan->copyleaks_scan_id}/summary.json.gz", $rawBody) : null;
 
         $fetching = DB::transaction(function () use ($scan, $status, $body, $summary): bool {
             if ($summary !== null) {
@@ -69,35 +71,6 @@ class AcceptWebhook
         if ($fetching) {
             event(new ScanResultsArrived($scan));
         }
-    }
-
-    /**
-     * Writes the compressed body to a temp file, then renames it into place, so a
-     * half written file is never seen. Skipped when the file is already there.
-     *
-     * @return array{path: string, sha256: string, size: int}
-     */
-    private function saveSummaryFile(Scan $scan, string $rawBody): array
-    {
-        $disk = Storage::disk('local');
-        $path = "scans/{$scan->copyleaks_scan_id}/summary.json.gz";
-
-        if ($disk->exists($path)) {
-            $bytes = (string) $disk->get($path);
-        } else {
-            $bytes = (string) gzencode($rawBody, 9);
-            $temp = $path.'.'.Str::random(8).'.tmp';
-            $disk->put($temp, $bytes);
-
-            try {
-                $disk->move($temp, $path);
-            } catch (\Throwable) {
-                // Another call won the race and the target now exists. Keep theirs.
-                $disk->delete($temp);
-            }
-        }
-
-        return ['path' => $path, 'sha256' => hash('sha256', $bytes), 'size' => strlen($bytes)];
     }
 
     /** `completed` moves a waiting or submitting scan to `fetching`. Returns true when it did. */

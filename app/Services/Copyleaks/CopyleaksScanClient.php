@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Http;
 use LogicException;
 
 /**
- * The real Copyleaks client. Three calls: login, submit, resend.
+ * The real Copyleaks client. Calls: login, submit, resend, export, delete.
  *
  * It uses Laravel's Http client because the official SDK is not confirmed on
  * Laravel 13 (spec 0004, Follow-up). It refuses to run under the `testing`
@@ -61,6 +61,56 @@ class CopyleaksScanClient implements ScanClient
             $response->status() === 404 => ResendResult::NotFound,
             default => throw new ScanClientUnavailable('Copyleaks refused the resend call ('.$response->status().').'),
         };
+    }
+
+    public function startExport(ExportRequest $request): ExportResult
+    {
+        $this->guardAgainstTests();
+
+        $headers = [['X-Webhook-Secret', $request->secret]];
+        $results = [];
+
+        foreach ($request->resultEndpoints as $id => $endpoint) {
+            $results[] = ['id' => (string) $id, 'verb' => 'POST', 'headers' => $headers, 'endpoint' => $endpoint];
+        }
+
+        try {
+            $response = $this->withLoginRetry(fn (string $token): Response => $this->http($token)
+                ->post($this->url("/v3/downloads/{$request->scanId}/export/{$request->exportId}"), [
+                    'results' => $results,
+                    'crawledVersion' => ['verb' => 'POST', 'headers' => $headers, 'endpoint' => $request->textEndpoint],
+                    'completionWebhook' => $request->completionEndpoint,
+                    'maxRetries' => 3,
+                    'developerPayload' => $request->scanId,
+                ]));
+        } catch (CopyleaksLoginRefused $e) {
+            throw new ScanClientUnavailable($e->getMessage(), previous: $e);
+        }
+
+        return match (true) {
+            $response->status() === 429 => throw new ScanClientUnavailable('Copyleaks asked us to slow down (429).'),
+            $response->status() === 409 => ExportResult::conflict(),
+            $response->status() === 404 => ExportResult::notFound(),
+            $response->successful() => ExportResult::started(),
+            default => ExportResult::refused((string) $response->status()),
+        };
+    }
+
+    public function deleteScan(string $scanId): bool
+    {
+        $this->guardAgainstTests();
+
+        try {
+            $response = $this->withLoginRetry(fn (string $token): Response => $this->http($token)
+                ->patch($this->url('/v3.1/scans/delete'), [
+                    'scans' => [['id' => $scanId]],
+                    'purge' => false,
+                ]));
+        } catch (CopyleaksLoginRefused $e) {
+            throw new ScanClientUnavailable($e->getMessage(), previous: $e);
+        }
+
+        return $response->status() === 202;
     }
 
     /** Never reached from a test. A fake ScanClient is bound there instead. */

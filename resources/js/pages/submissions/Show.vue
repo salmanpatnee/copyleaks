@@ -74,7 +74,7 @@ function resendResult(): void {
     });
 }
 
-// Refresh every 10 seconds while the answer is still on its way. Stops from "fetching" on.
+// Refresh every 10 seconds while the answer is still on its way. Keeps going while the files are saved and stops at "completed" or "failed".
 const poll = usePoll(
     10_000,
     {
@@ -120,7 +120,7 @@ const statusHelp = computed(() => {
         case 'waiting':
             return 'Copyleaks is checking the file. This page updates by itself.';
         case 'fetching':
-            return 'Copyleaks has finished. The result is being saved.';
+            return 'Copyleaks has finished. The result is being saved. This page updates by itself.';
         case 'completed':
             return 'The check is done.';
         default:

@@ -2,9 +2,7 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\Scan;
-use App\Services\Copyleaks\CopyleaksSettings;
-use App\Services\Copyleaks\WebhookToken;
+use App\Services\Copyleaks\CallerVerifier;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,31 +18,20 @@ class VerifyCopyleaksWebhook
 {
     public const STATUSES = ['completed', 'error'];
 
-    public function __construct(
-        private readonly WebhookToken $tokens,
-        private readonly CopyleaksSettings $settings,
-    ) {}
+    public function __construct(private readonly CallerVerifier $caller) {}
 
     public function handle(Request $request, Closure $next): Response
     {
         $scanId = (string) $request->route('scanId');
-        $token = (string) $request->route('token');
         $status = (string) $request->route('status');
 
         if (! in_array($status, self::STATUSES, true)) {
             return $this->notFound();
         }
 
-        $scan = Scan::query()->where('copyleaks_scan_id', $scanId)->first();
+        $scan = $this->caller->scanFor($request);
 
-        if ($scan === null || ! hash_equals($scan->webhook_token_hash, $this->tokens->hash($token))) {
-            return $this->notFound();
-        }
-
-        $secret = $this->settings->webhookSecret();
-        $sent = (string) $request->header('X-Webhook-Secret', '');
-
-        if ($secret === '' || ! hash_equals($secret, $sent)) {
+        if ($scan === null) {
             return $this->notFound();
         }
 

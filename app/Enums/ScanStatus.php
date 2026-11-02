@@ -55,10 +55,10 @@ enum ScanStatus: string
         };
     }
 
-    /** The saved page refreshes itself only while the answer is still on its way (AC-11). */
+    /** The saved page refreshes itself until the scan is completed or failed (spec 0004 AC-11, changed by spec 0005 AC-16). */
     public function isPolling(): bool
     {
-        return $this === self::Submitting || $this === self::Waiting;
+        return $this->isRunning();
     }
 
     public function isTerminal(): bool

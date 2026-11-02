@@ -19,6 +19,18 @@ class FakeScanClient implements ScanClient
     /** @var list<string> */
     public array $resent = [];
 
+    /** @var list<ExportRequest> */
+    public array $exported = [];
+
+    /** @var list<string> */
+    public array $deleted = [];
+
+    /** @var list<ExportResult|\Throwable> */
+    private array $exportScript = [];
+
+    /** @var list<bool|\Throwable> */
+    private array $deleteScript = [];
+
     /** @var list<SubmitResult|\Throwable> */
     private array $submitScript = [];
 
@@ -65,9 +77,55 @@ class FakeScanClient implements ScanClient
         return $next;
     }
 
+    public function willExport(ExportResult|\Throwable ...$outcomes): self
+    {
+        $this->exportScript = array_values($outcomes);
+
+        return $this;
+    }
+
+    public function willDelete(bool|\Throwable ...$outcomes): self
+    {
+        $this->deleteScript = array_values($outcomes);
+
+        return $this;
+    }
+
+    public function startExport(ExportRequest $request): ExportResult
+    {
+        $this->exported[] = $request;
+
+        $next = array_shift($this->exportScript) ?? ExportResult::started();
+
+        if ($next instanceof \Throwable) {
+            throw $next;
+        }
+
+        return $next;
+    }
+
+    public function deleteScan(string $scanId): bool
+    {
+        $this->deleted[] = $scanId;
+
+        $next = array_shift($this->deleteScript) ?? true;
+
+        if ($next instanceof \Throwable) {
+            throw $next;
+        }
+
+        return $next;
+    }
+
+    /** Every call made so far. Take it before a step and compare after to prove no new call (spec 0005, AC-15). */
+    public function callCount(): int
+    {
+        return count($this->submitted) + count($this->resent) + count($this->exported) + count($this->deleted);
+    }
+
     public function assertNothingSent(): void
     {
-        if ($this->submitted !== [] || $this->resent !== []) {
+        if ($this->callCount() !== 0) {
             throw new LogicException('The fake ScanClient was called.');
         }
     }

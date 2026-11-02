@@ -48,4 +48,18 @@ return [
 
     'max_webhook_bytes' => 10 * 1024 * 1024,
 
+    // Raw export files (spec 0005). Confirm the real size in the sandbox check.
+    'max_export_bytes' => 10 * 1024 * 1024,
+
+    // Accepted export tries per scan.
+    'export_max_attempts' => 3,
+
+    // After this many minutes an export try is treated as over and the next one starts. Never a failure on its own.
+    'export_stuck_minutes' => 15,
+
+    // A scan still `fetching` this long after Copyleaks finished is failed. Copyleaks removes it at 72 hours.
+    'export_give_up_hours' => 48,
+
+    'sweep_every_minutes' => 5,
+
 ];
