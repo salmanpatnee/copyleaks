@@ -9,6 +9,8 @@ use App\Services\Manuscripts\DocxInspector;
 use App\Services\Manuscripts\ManuscriptInspector;
 use App\Services\Manuscripts\ManuscriptInspectorChain;
 use App\Services\Manuscripts\PdfInspector;
+use App\Services\Reports\MpdfReportRenderer;
+use App\Services\Reports\ReportRenderer;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
@@ -31,6 +33,8 @@ class AppServiceProvider extends ServiceProvider
             $this->app->make(PdfInspector::class),
             $this->app->make(DocxInspector::class),
         ]));
+
+        $this->app->bind(ReportRenderer::class, MpdfReportRenderer::class);
 
         // Tests get the fake and can script it. Nothing else may ever reach Copyleaks from a test.
         $this->app->singleton(FakeScanClient::class);

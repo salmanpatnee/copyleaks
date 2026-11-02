@@ -44,6 +44,9 @@ composer ci:check
 
 # Turn on the pre-commit check (also runs inside composer setup)
 composer hooks:install
+
+# Build a sample report PDF from made up data (no Copyleaks call)
+php artisan report:sample
 ```
 
 ## Specs
@@ -71,7 +74,7 @@ Stored in `docs/specs/`. Format: `docs/specs/NNNN-title.md`. Scope is in `docs/s
 
 - [shadcn-vue](.agents/skills/shadcn-vue/): `unovue/shadcn-vue`, governs every UI component, page and `components.json` change
 
-Declined: vue-best-practices, laravel-inertia-vue, laravel-best-practices, Copyleaks MCP, MySQL MCP
+Declined: vue-best-practices, laravel-inertia-vue, laravel-best-practices, Copyleaks MCP, MySQL MCP, mPDF skills
 MCP servers: shadcn-vue (recommended)
 
 ## Context files
@@ -79,6 +82,7 @@ MCP servers: shadcn-vue (recommended)
 - [app/Models/AGENTS.md](app/Models/AGENTS.md): data model records, enums and the guards around scan status, artifacts and deletes
 - [app/Services/Copyleaks/AGENTS.md](app/Services/Copyleaks/AGENTS.md): Submit, the send job, the public webhook, resend, and the money safety rules
 - [app/Services/Manuscripts/AGENTS.md](app/Services/Manuscripts/AGENTS.md): upload screen file checks, safe store, size limits and the oversized post gotcha
+- [app/Services/Reports/AGENTS.md](app/Services/Reports/AGENTS.md): report PDF engine on mPDF, sections, theme, imported pages and the sample command
 
 <!-- Nested AGENTS.md files are listed here as they are created -->
 

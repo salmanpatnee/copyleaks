@@ -1,7 +1,7 @@
 # 0006. Report PDF engine (mPDF, Blade parts and the shape proof)
 
 **Date**: 2026-11-02
-**Status**: Proposed
+**Status**: Accepted
 
 ## Summary
 

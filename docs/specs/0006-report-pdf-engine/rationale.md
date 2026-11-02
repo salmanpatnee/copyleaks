@@ -106,25 +106,25 @@ Mark each line pass, or write the fallback that was used. Findings go in the nex
 
 ## Proof findings
 
-_Not run yet. Fill this in during build step 6, then keep it as the record that feature 9 and feature 13 read._
+_Run 2026-11-02 with `php artisan report:sample`, pages rendered to images and read by eye. Items 12 and 13 still wait for real files._
 
 | # | Result (pass, or fallback used) | Notes |
 |---|---|---|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
-| 6 | | |
-| 7 | | |
-| 8 | | |
-| 9 | | |
-| 10 | | |
-| 11 | | |
-| 12 | | |
-| 13 | | |
-| 14 | | Peak memory: ___ MB. Time: ___ s. Machine: ___. |
-| 15 | | |
+| 1 | Pass | `div` with `position:absolute` and `border-radius` in a Blade partial. Radius 7 and 7.5 look right. |
+| 2 | Pass | The circle is a `div`; the PNG icon is placed with mPDF's image call (not inside the HTML, which avoids Windows path problems). |
+| 3 | Pass | 8 pt corners and wrapped text work. The blank line between paragraphs needs an empty `div` (`margin-bottom` is ignored). |
+| 4 | Pass | A `div` of height 0.5 pt with a background. |
+| 5 | Pass (by eye) | `SetAlpha(0.8, 'Multiply')` then back to `Normal`. The text stays readable on an imported page. |
+| 6 | Pass | Circle and pill drawn with `RoundedRect`; number drawn as plain text. Lands in the left margin of an A4 page. |
+| 7 | Pass | A4 (595.32 × 841.92) and Letter pages in one file. Header and footer are placed from each page's own width and height. |
+| 8 | Pass | `N` is the sum of the sections' `pageCount()`, so every page, including imported ones, shows the true total. Text positions read back at the spec numbers (text top 27.6 and page height minus 40.4). |
+| 9 | Pass | Static TTFs load as R and B. Embedded names: NotoSans-Regular, NotoSans-SemiBold, LexendDeca-Medium, LexendDeca-SemiBold. |
+| 10 | Pass | Greek and Cyrillic fall back to DejaVu Sans and read correctly. Chinese and Arabic show boxes and never crash. |
+| 11 | Not tested, avoided | Tokens are written into the CSS by PHP (`ReportTheme::css()`), so the answer does not matter. |
+| 12 | Pass | Tried 2026-11-02 with files from `public/pdf/`: MS Word (PDF 1.7, 1 A4 page), Google Docs (PDF 1.4, 1 page), Chrome (PDF 1.4, 30 A4 pages). All three import with no error, keep their own size, and take the highlight, badge, header and footer. The Chrome file (1.1 MB) builds in 3.2 s at 56 MB. A garbage file fails with `unreadable_pdf`, no output file and no temp file. Only three files were tried, so a Word or Google Docs file saved with compressed cross references could still fail; `unsupported_pdf` covers that. |
+| 13 | Partly | Landscape: pass (tried 2026-11-02 with `public/pdf/Report PDF engine Landscape.pdf`, 4 pages, MediaBox 883.89 × 637.28, PDF 1.4). All 4 pages keep their landscape size, the strip sits at the page's own width and height (ID right edge at width minus 36, footer at the bottom), and the highlight and badge land at the given points from the top left. That file has `/Rotate 0`, so a page with a real rotation is still not tried. Encrypted files and a real rotation are skipped by choice (2026-11-02); the guard code exists but was never run on such a file. The error mapping for compressed cross references and encrypted files is in `PdfImportErrors` but only reached with real files. |
+| 14 | Pass | 100 imported pages and 100 source rows (110 pages in all). Peak memory 58 MB, 4.8 s. Machine: developer laptop, Windows, PHP 8.3, CLI `memory_limit` 1024M. |
+| 15 | Pass | An author line `<b>one</b>` and a source name with an `<img src="http://example.com/a.png">` print as plain text. The HTTP client is also replaced with one that refuses every request. |
 
 ## Design facts this spec relies on (from `docs/turnitin-report-design.md`)
 
