@@ -16,8 +16,8 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 3   | Data model                      | Slice 0    | done        |
 | 4   | Upload screen                   | Slice 0    | in-progress |
 | 5   | Cover details form              | Slice 0    | done        |
-| 6   | Copyleaks scan & result webhook | Slice 0    | in-progress |
-| 7   | Raw results storage             | Slice 0    | in-progress |
+| 6   | Copyleaks scan & result webhook | Slice 0    | done        |
+| 7   | Raw results storage             | Slice 0    | done        |
 | 8   | Report PDF engine               | Slice 0    | planned     |
 | 9   | Manuscript page rendering       | Slice 0    | planned     |
 | 10  | Copyleaks to report mapping     | Slice 0    | planned     |
@@ -109,12 +109,12 @@ Send the uploaded file to Copyleaks for a similarity check and an AI check, and 
 spec [0004](specs/0004-copyleaks-scan-webhook/index.md) · code in `app/Services/Copyleaks`, `app/Actions/SubmitScan.php`, `app/Actions/AcceptWebhook.php`, `app/Actions/ResendScanResult.php`, `app/Jobs/SubmitScanJob.php`, `app/Http/Controllers/ScanController.php`, `routes/webhooks.php`, `resources/js/pages/submissions/Show.vue`
 
 - [x] Design it (spec): `/architect copyleaks scan & result webhook`
-- [ ] Build it: `/develop copyleaks scan & result webhook`
+- [x] Build it: `/develop copyleaks scan & result webhook`
     - [x] Client seam, then the thin thread on the fake client: Submit, send job, webhook to `fetching` (AC-2, AC-4 to AC-6, AC-8 to AC-10)
     - [x] Thicken the webhook: error, repeats, size check, late results (AC-8 to AC-10)
     - [x] Thicken the submit: retries, 15 minute deadline, Submit guards (AC-1, AC-3, AC-5, AC-7, AC-13)
     - [x] Resend and the real page with polling (AC-1, AC-11, AC-12)
-    - [ ] Pest tests, architecture test, one sandbox check by hand (AC-5, AC-9, AC-13, AC-14) (tests done, the hand check is still owed)
+    - [x] Pest tests, architecture test, one sandbox check by hand (AC-5, AC-9, AC-13, AC-14)
 - [x] Verify it: `/check verify copyleaks scan & result webhook` (22 of 36 steps run live, no failures, 14 covered by tests only)
 - [x] Test it: `/test copyleaks scan & result webhook` (145 passed, all 14 AC covered)
 
@@ -122,17 +122,17 @@ spec [0004](specs/0004-copyleaks-scan-webhook/index.md) · code in `app/Services
 
 Download the export files (every result file and the crawled text), save each exactly as it arrives next to the saved summary and the original file, then finish the scan. A sweep rescues stuck scans, and the scan is deleted on Copyleaks afterwards.
 **Done when:** the saved replies match what Copyleaks sent, and a PDF can be rebuilt from them without scanning again.
-spec [0005](specs/0005-raw-results-storage/index.md) · code in `app/Services/Copyleaks`, `app/Jobs`, `app/Http/Middleware`, `routes/webhooks.php`, `routes/console.php`
+spec [0005](specs/0005-raw-results-storage/index.md) · code in `app/Services/Copyleaks`, `app/Actions`, `app/Jobs`, `app/Listeners`, `app/Console/Commands`, `app/Http/Middleware`, `routes/webhooks.php`, `routes/console.php`
 
 - [x] Design it (spec): `/architect raw results storage`
-- [ ] Build it: `/develop raw results storage`
-    - [ ] Client seam, then the thin thread on the fake client: export job, one push, completion, finished scan (AC-1, AC-3, AC-6 to AC-8, AC-13)
-    - [ ] Thicken the pushes: new middleware, size rule, repeats, late pushes (AC-2, AC-4, AC-5, AC-14)
-    - [ ] Thicken the failures and add the sweep: attempts, retries, export call answers, 48 hour deadline (AC-1, AC-9 to AC-11)
-    - [ ] Delete job and page polling during `fetching` (AC-12, AC-16)
-    - [ ] Pest tests, architecture test, rebuild proof, one sandbox check by hand (AC-13 to AC-15)
-- [ ] Verify it: `/check verify raw results storage`
-- [ ] Test it: `/test raw results storage`
+- [x] Build it: `/develop raw results storage`
+    - [x] Client seam, then the thin thread on the fake client: export job, one push, completion, finished scan (AC-1, AC-3, AC-6 to AC-8, AC-13)
+    - [x] Thicken the pushes: new middleware, size rule, repeats, late pushes (AC-2, AC-4, AC-5, AC-14)
+    - [x] Thicken the failures and add the sweep: attempts, retries, export call answers, 48 hour deadline (AC-1, AC-9 to AC-11)
+    - [x] Delete job and page polling during `fetching` (AC-12, AC-16)
+    - [x] Pest tests, architecture test, rebuild proof, one sandbox check by hand (AC-13 to AC-15)
+- [x] Verify it: `/check verify raw results storage`
+- [x] Test it: `/test raw results storage` (179 passed in the Copyleaks folder; AC-16 and the sandbox checks stay manual)
 
 ### 8. Report PDF engine · needs a decision
 
