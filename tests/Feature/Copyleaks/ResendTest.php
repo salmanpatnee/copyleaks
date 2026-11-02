@@ -185,7 +185,7 @@ describe('the saved page props (AC-1, AC-11, AC-12)', function () {
             ->where('scan.is_polling', false));
     });
 
-    it('polls only while submitting or waiting and hides the panel while a scan runs', function (ScanStatus $status, bool $polling, bool $running) {
+    it('polls while the scan runs (until completed or failed) and hides the panel while a scan runs', function (ScanStatus $status, bool $polling, bool $running) {
         $submission = pdfSubmission();
         scanFor($submission, $status);
 
@@ -197,7 +197,7 @@ describe('the saved page props (AC-1, AC-11, AC-12)', function () {
     })->with([
         [ScanStatus::Submitting, true, true],
         [ScanStatus::Waiting, true, true],
-        [ScanStatus::Fetching, false, true],
+        [ScanStatus::Fetching, true, true],
         [ScanStatus::Completed, false, false],
     ]);
 

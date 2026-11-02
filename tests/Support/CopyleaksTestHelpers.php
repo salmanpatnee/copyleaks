@@ -1,9 +1,13 @@
 <?php
 
 use App\Enums\ScanStatus;
+use App\Jobs\StartExportJob;
 use App\Models\Scan;
+use App\Models\ScanArtifact;
+use App\Models\ScanEvent;
 use App\Models\Submission;
 use App\Services\Copyleaks\FakeScanClient;
+use App\Services\Copyleaks\RawFileWriter;
 use App\Services\Copyleaks\WebhookToken;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -96,4 +100,84 @@ function callWebhook(object $test, string $path, array|string $body, array $head
     ];
 
     return $test->call('POST', $path, [], [], [], $server, $raw);
+}
+
+/** A `completed` summary that lists the given result IDs, as Copyleaks sends it. */
+function exportSummaryBody(Scan $scan, array $resultIds = ['res-a', 'res-b'], array $overrides = []): array
+{
+    return completedBody($scan, [
+        'results' => [
+            'score' => ['aggregatedScore' => 12.456, 'identicalWords' => 10],
+            'internet' => array_map(fn (string $id): array => ['id' => $id, 'title' => 'x'], $resultIds),
+            'database' => [],
+            'batch' => [],
+            'repositories' => [],
+        ],
+        'notifications' => ['alerts' => [[
+            'code' => 'suspected-ai-text',
+            'additionalData' => json_encode(['summary' => ['human' => 0.75, 'ai' => 0.25]]),
+        ]]],
+        ...$overrides,
+    ]);
+}
+
+/**
+ * A `fetching` scan with its summary file (`$tweakSummary` may change the summary body first) and artifact row saved, like spec 0004 leaves it.
+ * Fires no event, so no export is queued.
+ */
+function fetchingScan(array $resultIds = ['res-a', 'res-b'], array $scanAttributes = [], ?callable $tweakSummary = null): Scan
+{
+    $scan = scanFor(pdfSubmission(), ScanStatus::Fetching, $scanAttributes);
+    $summary = exportSummaryBody($scan, $resultIds);
+    $raw = json_encode($tweakSummary === null ? $summary : $tweakSummary($summary));
+    $file = app(RawFileWriter::class)->store("scans/{$scan->copyleaks_scan_id}/summary.json.gz", $raw);
+
+    ScanArtifact::query()->insert([
+        'scan_id' => $scan->id, 'kind' => 'summary', 'source_id' => '', 'path' => $file['path'],
+        'sha256' => $file['sha256'], 'size_bytes' => $file['size'], 'created_at' => now(),
+    ]);
+    ScanEvent::query()->insert([
+        'scan_id' => $scan->id, 'kind' => 'status', 'status' => 'completed', 'payload' => '{}',
+        'received_at' => now(), 'handled_at' => now(),
+    ]);
+
+    return $scan->refresh();
+}
+
+/** Runs the export job for one numbered try, now, even while the queue is faked. */
+function runExport(Scan $scan, int $attempt = 1): void
+{
+    app()->call([new StartExportJob($scan->id, $attempt), 'handle']);
+}
+
+function exportId(Scan $scan, int $attempt = 1): string
+{
+    return "{$scan->copyleaks_scan_id}-{$attempt}";
+}
+
+function exportPath(Scan $scan, string $exportId, string $part, ?string $resultId = null, ?string $token = null): string
+{
+    $token ??= app(WebhookToken::class)->for($scan->copyleaks_scan_id);
+    $tail = $part === 'result' ? "result/{$resultId}" : $part;
+
+    return "/webhooks/copyleaks/{$scan->copyleaks_scan_id}/{$token}/export/{$exportId}/{$tail}";
+}
+
+/** @return array<string, mixed> */
+function exportCompletedBody(Scan $scan, array $tasks = [['isHealthy' => true, 'httpStatusCode' => 200, 'endpoint' => 'https://secret.example/token']]): array
+{
+    return ['completed' => true, 'developerPayload' => $scan->copyleaks_scan_id, 'tasks' => $tasks];
+}
+
+/** Pushes every file of an export and then the completion call, as a healthy Copyleaks would. */
+function pushEverything(object $test, Scan $scan, int $attempt = 1, array $resultIds = ['res-a', 'res-b']): void
+{
+    $id = exportId($scan, $attempt);
+
+    foreach ($resultIds as $resultId) {
+        callWebhook($test, exportPath($scan, $id, 'result', $resultId), json_encode(['result' => $resultId]))->assertOk();
+    }
+
+    callWebhook($test, exportPath($scan, $id, 'text'), json_encode(['text' => 'crawled']))->assertOk();
+    callWebhook($test, exportPath($scan, $id, 'completed'), exportCompletedBody($scan))->assertOk();
 }
