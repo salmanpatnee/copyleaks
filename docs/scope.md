@@ -19,7 +19,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 6   | Copyleaks scan & result webhook | Slice 0    | done        |
 | 7   | Raw results storage             | Slice 0    | done        |
 | 8   | Report PDF engine               | Slice 0    | done        |
-| 9   | Manuscript page rendering       | Slice 0    | planned     |
+| 9   | Manuscript page rendering       | Slice 0    | in-progress |
 | 10  | Copyleaks to report mapping     | Slice 0    | planned     |
 | 11  | Similarity cover page           | Slice 0    | planned     |
 | 12  | Similarity overview pages       | Slice 0    | planned     |
@@ -151,12 +151,21 @@ code in `app/Services/Reports/`, `resources/views/reports/`, `resources/report/`
 - [ ] Verify it: `/check verify report pdf engine` _(skipped: blocked on AC-8, AC-10 and no Test it run)_
 - [ ] Test it: `/test report pdf engine` _(skipped)_
 
-### 9. Manuscript page rendering · needs a decision
+### 9. Manuscript page rendering
 
-Turn the uploaded Word or PDF file into pages we can draw highlights on, keeping the original page size (A4 or Letter) and the original look.
-**Done when:** a Word file and a PDF file both appear as pages inside the report with their text positions known.
+Turn the uploaded PDF file into pages we can draw highlights on, keeping the original page size (A4 or Letter) and the original look. When the PDF text can't be matched well enough, the whole manuscript is shown as text pages built from the Copyleaks text. Word files move to a later feature (see Deferred).
+**Done when:** a PDF appears as pages inside the report with its word positions known, and a hard to read PDF falls back to text pages with the reason saved.
+spec [0007](specs/0007-manuscript-page-rendering/index.md)
 
-- [ ] Design it (spec): `/architect manuscript page rendering`
+- [x] Design it (spec): `/architect manuscript page rendering`
+- [ ] Build it: `/develop manuscript page rendering`
+    - [ ] Thin thread: page box, font widths, word boxes, simple matching and `report:manuscript` on the stored sandbox scan (AC-1, AC-2, AC-8)
+    - [ ] Proof on 3 real sandbox PDFs and the emoji file, findings in `rationale.md` (AC-10, AC-12)
+    - [ ] Matching rules: clean up, resync, both thresholds, `lineBoxes()` edge rules (AC-2, AC-3, AC-10)
+    - [ ] Checks, stop reasons and text pages fallback (AC-4, AC-5, AC-6)
+    - [ ] Save the outcome on reports, safety check and the 100 page run (AC-7, AC-9, AC-11)
+- [ ] Verify it: `/check verify manuscript page rendering`
+- [ ] Test it: `/test manuscript page rendering`
 
 ### 10. Copyleaks to report mapping · needs a decision
 
@@ -287,6 +296,7 @@ Out of scope for the first version, kept so the plan stays honest.
 - **Payments and billing**: charge for reports · needs a decision · GA
 - **Editing results by hand**: staff change results before the report · needs a decision
 - **Other report styles**: anything besides the Turnitin style layout · needs a decision
+- **Word manuscripts**: turn a `.docx` into report pages (needs a converter Hostinger can't run, or a paid cloud API). Until then staff save Word files as PDF · needs a decision · from spec 0007
 
 ## Legend
 
