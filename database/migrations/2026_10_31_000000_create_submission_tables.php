@@ -85,6 +85,8 @@ return new class extends Migration
             $table->unsignedBigInteger('size_bytes');
             $table->unsignedInteger('page_count');
             $table->string('renderer_version', 20);
+            $table->string('manuscript_mode', 20)->nullable();
+            $table->string('manuscript_fallback_reason', 40)->nullable();
             $table->timestamp('built_at');
 
             $table->unique(['scan_id', 'kind']);

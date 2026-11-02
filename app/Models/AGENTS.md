@@ -34,6 +34,7 @@ The records behind the tool: a submission (the upload and its cover details) has
 - `scans.webhook_token_hash` is hidden and must never be logged or sent to the browser.
 - Same file checksum on many submissions is allowed on purpose (a plain index, not unique).
 - `submissions.page_count` is null for Word files (unknown). `Submission::isWord()` tells them apart. Handle null in every feature that reads it.
+- `reports.manuscript_mode` and `manuscript_fallback_reason` are nullable strings with enum casts (`ManuscriptMode`, `ManuscriptFallbackReason`), both null when no outcome was given. Set only through `ReportReplacer` (spec 0007).
 - Tests use in memory sqlite with foreign keys on. Keep the cascade test that fails if they are off.
 
 ## Related specs

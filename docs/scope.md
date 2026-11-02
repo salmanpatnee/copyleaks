@@ -155,16 +155,16 @@ code in `app/Services/Reports/`, `resources/views/reports/`, `resources/report/`
 
 Turn the uploaded PDF file into pages we can draw highlights on, keeping the original page size (A4 or Letter) and the original look. When the PDF text can't be matched well enough, the whole manuscript is shown as text pages built from the Copyleaks text. Word files move to a later feature (see Deferred).
 **Done when:** a PDF appears as pages inside the report with its word positions known, and a hard to read PDF falls back to text pages with the reason saved.
-spec [0007](specs/0007-manuscript-page-rendering/index.md)
+spec [0007](specs/0007-manuscript-page-rendering/index.md) · code in `app/Services/Reports/Manuscript/`
 
 - [x] Design it (spec): `/architect manuscript page rendering`
 - [ ] Build it: `/develop manuscript page rendering`
-    - [ ] Thin thread: page box, font widths, word boxes, simple matching and `report:manuscript` on the stored sandbox scan (AC-1, AC-2, AC-8)
+    - [x] Thin thread: page box, font widths, word boxes, simple matching and `report:manuscript` on the stored sandbox scan (AC-1, AC-2, AC-8)
     - [ ] Proof on 3 real sandbox PDFs and the emoji file, findings in `rationale.md` (AC-10, AC-12)
-    - [ ] Matching rules: clean up, resync, both thresholds, `lineBoxes()` edge rules (AC-2, AC-3, AC-10)
-    - [ ] Checks, stop reasons and text pages fallback (AC-4, AC-5, AC-6)
-    - [ ] Save the outcome on reports, safety check and the 100 page run (AC-7, AC-9, AC-11)
-- [ ] Verify it: `/check verify manuscript page rendering`
+    - [x] Re anchor pages by search (not Copyleaks page starts), clean up, resync, both thresholds, `lineBoxes()` edge rules (AC-2, AC-3, AC-10, AC-13)
+    - [x] Checks, stop reasons and text pages fallback (AC-4, AC-5, AC-6)
+    - [x] Save the outcome on reports, safety check and the 100 page run (AC-7, AC-9, AC-11)
+- [x] Verify it: `/check verify manuscript page rendering` _(12 of 13 steps pass, AC-10 accepted without a real match: owes a scan with a match after an emoji)_
 - [ ] Test it: `/test manuscript page rendering`
 
 ### 10. Copyleaks to report mapping · needs a decision

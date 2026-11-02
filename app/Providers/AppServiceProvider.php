@@ -9,8 +9,12 @@ use App\Services\Manuscripts\DocxInspector;
 use App\Services\Manuscripts\ManuscriptInspector;
 use App\Services\Manuscripts\ManuscriptInspectorChain;
 use App\Services\Manuscripts\PdfInspector;
+use App\Services\Reports\Manuscript\PdfWordExtractor;
+use App\Services\Reports\Manuscript\SmalotPdfWordExtractor;
 use App\Services\Reports\MpdfReportRenderer;
+use App\Services\Reports\MpdfTextMeasurer;
 use App\Services\Reports\ReportRenderer;
+use App\Services\Reports\TextMeasurer;
 use Carbon\CarbonImmutable;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Contracts\Foundation\Application;
@@ -35,6 +39,8 @@ class AppServiceProvider extends ServiceProvider
         ]));
 
         $this->app->bind(ReportRenderer::class, MpdfReportRenderer::class);
+        $this->app->bind(TextMeasurer::class, MpdfTextMeasurer::class);
+        $this->app->bind(PdfWordExtractor::class, SmalotPdfWordExtractor::class);
 
         // Tests get the fake and can script it. Nothing else may ever reach Copyleaks from a test.
         $this->app->singleton(FakeScanClient::class);

@@ -15,4 +15,12 @@ return [
 
     /** Samples keep only this many newest files. */
     'sample_keep' => 5,
+
+    'manuscript' => [
+        /** Share of Copyleaks letters and digits that must be found on the PDF pages. */
+        'min_match_share' => 0.98,
+
+        /** Share of each PDF page's letters and digits that must match. */
+        'min_page_share' => 0.90,
+    ],
 ];

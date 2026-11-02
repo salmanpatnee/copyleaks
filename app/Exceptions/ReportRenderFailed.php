@@ -32,6 +32,21 @@ class ReportRenderFailed extends RuntimeException
         return new self('unsupported_pdf', 'The manuscript PDF uses a format the report engine cannot import (compressed cross references).');
     }
 
+    public static function wordNotSupported(): self
+    {
+        return new self('word_not_supported', 'Word manuscripts cannot be turned into report pages yet. Save the file as PDF.');
+    }
+
+    public static function crawledTextMissing(): self
+    {
+        return new self('crawled_text_missing', 'The saved Copyleaks text is missing or unreadable.');
+    }
+
+    public static function noText(): self
+    {
+        return new self('no_text', 'The Copyleaks text has no letters or digits.');
+    }
+
     public static function writeFailed(): self
     {
         return new self('write_failed', 'The finished PDF could not be written to storage.');

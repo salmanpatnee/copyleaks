@@ -83,6 +83,7 @@ MCP servers: shadcn-vue (recommended)
 - [app/Services/Copyleaks/AGENTS.md](app/Services/Copyleaks/AGENTS.md): Submit, the send job, the public webhook, resend, and the money safety rules
 - [app/Services/Manuscripts/AGENTS.md](app/Services/Manuscripts/AGENTS.md): upload screen file checks, safe store, size limits and the oversized post gotcha
 - [app/Services/Reports/AGENTS.md](app/Services/Reports/AGENTS.md): report PDF engine on mPDF, sections, theme, imported pages and the sample command
+- [app/Services/Reports/Manuscript/AGENTS.md](app/Services/Reports/Manuscript/AGENTS.md): manuscript pages (original or text mode), word matching, thresholds, the check command and the smalot matrix gotcha
 
 <!-- Nested AGENTS.md files are listed here as they are created -->
 

@@ -146,6 +146,14 @@ final class SectionCanvas implements TextMeasurer
         }
     }
 
+    /** Draws a thin red outline. Only for the manuscript check PDF (`report:manuscript`). */
+    public function outline(float $x, float $y, float $w, float $h): void
+    {
+        $this->mpdf->SetLineWidth(Pt::toMm(0.4));
+        $this->mpdf->SetDrawColor(220, 20, 60);
+        $this->mpdf->Rect(Pt::toMm($x), Pt::toMm($y), Pt::toMm($w), Pt::toMm($h), 'D');
+    }
+
     /** Draws the strip on the last page. Called once at the end of the section. */
     public function finish(): void
     {

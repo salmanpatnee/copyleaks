@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Enums\ReportKind;
 use App\Models\Report;
 use App\Models\Scan;
+use App\Services\Reports\Manuscript\ManuscriptOutcome;
 use Closure;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemFactory;
 use Illuminate\Database\ConnectionInterface;
@@ -25,13 +26,14 @@ class ReportReplacer
 
     /**
      * @param  Closure(): BuiltReport  $build  writes the new PDF to a new path and describes it
+     * @param  ManuscriptOutcome|null  $manuscript  how the manuscript pages were made (spec 0007); both columns stay null without it
      */
-    public function replace(Scan $scan, ReportKind $kind, Closure $build): Report
+    public function replace(Scan $scan, ReportKind $kind, Closure $build, ?ManuscriptOutcome $manuscript = null): Report
     {
         $built = $build();
 
         try {
-            [$report, $oldPath] = $this->db->transaction(function () use ($scan, $kind, $built): array {
+            [$report, $oldPath] = $this->db->transaction(function () use ($scan, $kind, $built, $manuscript): array {
                 $old = Report::query()->where('scan_id', $scan->id)->where('kind', $kind->value)->first();
 
                 $report = Report::query()->updateOrCreate(
@@ -42,6 +44,8 @@ class ReportReplacer
                         'size_bytes' => $built->sizeBytes,
                         'page_count' => $built->pageCount,
                         'renderer_version' => $built->rendererVersion,
+                        'manuscript_mode' => $manuscript?->mode,
+                        'manuscript_fallback_reason' => $manuscript?->reason,
                         'built_at' => now(),
                     ],
                 );
