@@ -18,7 +18,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 5   | Cover details form              | Slice 0    | done        |
 | 6   | Copyleaks scan & result webhook | Slice 0    | done        |
 | 7   | Raw results storage             | Slice 0    | done        |
-| 8   | Report PDF engine               | Slice 0    | planned     |
+| 8   | Report PDF engine               | Slice 0    | in-progress |
 | 9   | Manuscript page rendering       | Slice 0    | planned     |
 | 10  | Copyleaks to report mapping     | Slice 0    | planned     |
 | 11  | Similarity cover page           | Slice 0    | planned     |
@@ -134,12 +134,21 @@ spec [0005](specs/0005-raw-results-storage/index.md) · code in `app/Services/Co
 - [x] Verify it: `/check verify raw results storage`
 - [x] Test it: `/test raw results storage` (179 passed in the Copyleaks folder; AC-16 and the sandbox checks stay manual)
 
-### 8. Report PDF engine · needs a decision
+### 8. Report PDF engine
 
 Build PDFs from our own HTML templates, following the design spec: Letter pages with 36 pt side margins, Lexend Deca and Noto Sans fonts, the color tokens, the shared header and footer (`Page n of N - Section` and an ID) with our logo, and the page break rules. Font licences are still to confirm.
 **Done when:** a sample report renders with the right page sizes, margins, fonts, colors, header and footer, and uses our logo only.
+spec [0006](specs/0006-report-pdf-engine/index.md)
 
-- [ ] Design it (spec): `/architect report pdf engine`
+- [x] Design it (spec): `/architect report pdf engine`
+- [ ] Build it: `/develop report pdf engine`
+    - [ ] Setup: mPDF, config, fonts with licences, logo and icons (AC-3, AC-15)
+    - [ ] Thin thread: renderer, safe write, `BuiltReport`, `report:sample` with one page (AC-1, AC-3, AC-13, AC-14)
+    - [ ] Shell: theme, page setup, header and footer with page numbers (AC-2, AC-4, AC-5, AC-10)
+    - [ ] Parts and paging: pills, callout, group and source rows, pager, escaping, fallback fonts (AC-6, AC-7, AC-9, AC-11)
+    - [ ] Imported pages, overlays, then the 100 page benchmark and shape proof findings (AC-2, AC-5, AC-7, AC-8, AC-12, AC-13, AC-15)
+- [ ] Verify it: `/check verify report pdf engine`
+- [ ] Test it: `/test report pdf engine`
 
 ### 9. Manuscript page rendering · needs a decision
 
