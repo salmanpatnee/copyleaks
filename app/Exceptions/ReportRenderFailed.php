@@ -42,6 +42,36 @@ class ReportRenderFailed extends RuntimeException
         return new self('crawled_text_missing', 'The saved Copyleaks text is missing or unreadable.');
     }
 
+    public static function scanNotCompleted(): self
+    {
+        return new self('scan_not_completed', 'Only a completed scan can be turned into report data.');
+    }
+
+    public static function summaryMissing(): self
+    {
+        return new self('summary_missing', 'The saved Copyleaks summary is missing.');
+    }
+
+    public static function resultMissing(): self
+    {
+        return new self('result_missing', 'A saved Copyleaks result file is missing.');
+    }
+
+    public static function checksumMismatch(): self
+    {
+        return new self('checksum_mismatch', 'A saved Copyleaks file does not match its checksum.');
+    }
+
+    public static function summaryUnreadable(): self
+    {
+        return new self('summary_unreadable', 'The saved Copyleaks summary is damaged or lacks a value the report needs.');
+    }
+
+    public static function resultUnreadable(): self
+    {
+        return new self('result_unreadable', 'A saved Copyleaks result file is damaged.');
+    }
+
     public static function noText(): self
     {
         return new self('no_text', 'The Copyleaks text has no letters or digits.');

@@ -70,7 +70,9 @@ final class ReportParts
     {
         $color = SourceColor::forRank($row->rank);
         $this->canvas->view('reports.parts.pill', ['x' => 36, 'y' => $y, 'w' => 24.5, 'h' => 15, 'bg' => $color->strong, 'class' => 'pill', 'text' => (string) $row->rank]);
-        $this->canvas->view('reports.parts.pill', ['x' => 66, 'y' => $y, 'w' => 70, 'h' => 15, 'bg' => $color->tint, 'class' => 'pill-tint', 'text' => $row->category]);
+        if ($row->category !== null) {
+            $this->canvas->view('reports.parts.pill', ['x' => 66, 'y' => $y, 'w' => 70, 'h' => 15, 'bg' => $color->tint, 'class' => 'pill-tint', 'text' => $row->category]);
+        }
         $this->text(ReportTheme::MARGIN_X, $y + 19.4, $this->fitter->fit($row->name), 'source');
         $this->text(ReportTheme::PCT_X, $y + 19.4, PercentFormat::label($row->percent), 'source');
         $this->divider($y + 38, ReportTheme::MARGIN_X, ReportTheme::ROW_DIVIDER_END_X - ReportTheme::MARGIN_X);

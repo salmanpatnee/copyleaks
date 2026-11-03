@@ -2,12 +2,12 @@
 
 namespace App\Services\Reports\Parts;
 
-/** One line of the Top Sources list. */
+/** One line of the Top Sources list. A null category leaves out only the category pill. */
 final readonly class SourceRow
 {
     public function __construct(
         public int $rank,
-        public string $category,
+        public ?string $category,
         public string $name,
         public float $percent,
     ) {}

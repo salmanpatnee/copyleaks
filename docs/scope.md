@@ -176,10 +176,10 @@ spec [0008](specs/0008-copyleaks-report-mapping/index.md) · code in `app/Servic
 
 - [x] Design it (spec): `/architect copyleaks to report mapping`
 - [ ] Build it: `/develop copyleaks to report mapping`
-    - [ ] Thin thread: reader, `ReportData`, score and cover details on a fixture scan (AC-1 to AC-3, AC-11)
-    - [ ] Source list: ranked rows, percent, names, Internet pill, nullable category in the engine (AC-4 to AC-7)
-    - [ ] Highlight ranges: result files, merge and best rank, fixed style (AC-8 to AC-10)
-    - [ ] Failures, `report:mapping` command, tests and one look at a real sandbox scan (AC-12 to AC-14)
+    - [x] Thin thread: reader, `ReportData`, score and cover details on a fixture scan (AC-1 to AC-3, AC-11)
+    - [x] Source list: ranked rows, percent, names, Internet pill, nullable category in the engine (AC-4 to AC-7)
+    - [x] Highlight ranges: result files, merge and best rank, fixed style (AC-8 to AC-10)
+    - [ ] Failures, `report:mapping` command, tests and one look at a real sandbox scan (AC-12 to AC-14) _(all done except the real scan look: no saved scan on this machine)_
 - [ ] Verify it: `/check verify copyleaks to report mapping`
 - [ ] Test it: `/test copyleaks to report mapping`
 

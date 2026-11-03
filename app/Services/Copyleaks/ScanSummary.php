@@ -33,6 +33,47 @@ final readonly class ScanSummary
         return array_values(array_unique($ids));
     }
 
+    /**
+     * Every item of the four result groups, in the group order internet, database, batch, repositories.
+     * An item whose non empty `id` already appeared is dropped, like `resultIds()` does. Items without an id are all kept.
+     *
+     * @return list<array{group: string, item: mixed}>
+     */
+    public function resultItems(): array
+    {
+        $items = [];
+        $seen = [];
+
+        foreach (self::RESULT_GROUPS as $group) {
+            foreach (array_values((array) Arr::get($this->data, "results.{$group}", [])) as $item) {
+                $id = is_array($item) ? ($item['id'] ?? null) : null;
+
+                if (is_string($id) && $id !== '') {
+                    if (isset($seen[$id])) {
+                        continue;
+                    }
+                    $seen[$id] = true;
+                }
+
+                $items[] = ['group' => $group, 'item' => $item];
+            }
+        }
+
+        return $items;
+    }
+
+    /** `scannedDocument.totalWords` as a whole number. Null when missing or not a whole number. */
+    public function totalWords(): ?int
+    {
+        $words = Arr::get($this->data, 'scannedDocument.totalWords');
+
+        if (is_float($words) && $words === floor($words) && abs($words) < PHP_INT_MAX) {
+            return (int) $words;
+        }
+
+        return is_int($words) ? $words : null;
+    }
+
     /** `results.score.aggregatedScore`, already a percent. Null when missing or not a number. */
     public function similarityPercent(): ?float
     {

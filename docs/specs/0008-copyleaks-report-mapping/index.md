@@ -1,7 +1,7 @@
 # 0008. Copyleaks to report mapping
 
 **Date**: 2026-11-03
-**Status**: Proposed
+**Status**: In Progress
 
 ## Summary
 
