@@ -1,0 +1,51 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 776 >>
+stream
+BT /F1 11 Tf 50 780 Td 16 TL
+(Welcome  to the manuscript check, a short test document  for the page rendering feature.) '
+(The history of scholarly publishing shows that careful review improves the quality of research.) '
+(Editors often ask authors to explain their methods in clear language so that others can repeat the work.) '
+(A manuscript that cites its sources honestly gives readers confidence in the conclusions it reaches.) '
+(Plagiarism checks help staff find passages that match earlier papers, websites and published books.) '
+(This document exists only to confirm that words after an emoji still map to the right place on the page.) '
+(Each paragraph contains ordinary words about writing, reviewing and editing, so the checking tool has real sentences.) '
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /ToUnicode 6 0 R >>
+endobj
+6 0 obj
+<< /Length 279 >>
+stream
+/CIDInit /ProcSet findresource begin 12 dict begin begincmap
+/CMapName /Adobe-Identity-UCS def /CMapType 2 def
+1 begincodespacerange <00> <FF> endcodespacerange
+2 beginbfchar <01> <D83DDE00> <02> <D83DDE80> endbfchar
+endcmap CMapName currentdict /CMap defineresource pop end end
+endstream
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000241 00000 n 
+0000001067 00000 n 
+0000001154 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+1483
+%%EOF
