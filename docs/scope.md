@@ -20,7 +20,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 7   | Raw results storage             | Slice 0    | done        |
 | 8   | Report PDF engine               | Slice 0    | done        |
 | 9   | Manuscript page rendering       | Slice 0    | in-progress |
-| 10  | Copyleaks to report mapping     | Slice 0    | planned     |
+| 10  | Copyleaks to report mapping     | Slice 0    | in-progress |
 | 11  | Similarity cover page           | Slice 0    | planned     |
 | 12  | Similarity overview pages       | Slice 0    | planned     |
 | 13  | Highlights & margin badges      | Slice 0    | planned     |
@@ -167,12 +167,21 @@ spec [0007](specs/0007-manuscript-page-rendering/index.md) · code in `app/Servi
 - [x] Verify it: `/check verify manuscript page rendering` _(12 of 13 steps pass, AC-10 accepted without a real match: owes a scan with a match after an emoji)_
 - [ ] Test it: `/test manuscript page rendering`
 
-### 10. Copyleaks to report mapping · needs a decision
+### 10. Copyleaks to report mapping
 
 Decide which Copyleaks field fills which spot in the Turnitin layout, using only what Copyleaks returns: the overall score, the matched text types, the source list with its percentages, and the match positions. Spots with no matching Copyleaks data are left out for now. The header and footer ID uses the Copyleaks scan ID until Slice 3.
 **Done when:** a written table shows every spot in the layout and the Copyleaks field behind it (or "left out"), and a saved result can be turned into the data the report pages need without scanning again.
 
-- [ ] Design it (spec): `/architect copyleaks to report mapping`
+spec [0008](specs/0008-copyleaks-report-mapping/index.md) · code in `app/Services/Reports/Mapping/`
+
+- [x] Design it (spec): `/architect copyleaks to report mapping`
+- [ ] Build it: `/develop copyleaks to report mapping`
+    - [ ] Thin thread: reader, `ReportData`, score and cover details on a fixture scan (AC-1 to AC-3, AC-11)
+    - [ ] Source list: ranked rows, percent, names, Internet pill, nullable category in the engine (AC-4 to AC-7)
+    - [ ] Highlight ranges: result files, merge and best rank, fixed style (AC-8 to AC-10)
+    - [ ] Failures, `report:mapping` command, tests and one look at a real sandbox scan (AC-12 to AC-14)
+- [ ] Verify it: `/check verify copyleaks to report mapping`
+- [ ] Test it: `/test copyleaks to report mapping`
 
 ### 11. Similarity cover page
 
