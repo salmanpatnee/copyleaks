@@ -6,15 +6,15 @@ Turns one `completed` scan into a typed `ReportData` from our own saved files on
 
 ## Key files
 
-| File                                      | Owns                                                                                                                                       |
-| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `ReportDataMapper.php`                    | The only entry point. `map(Scan): ReportData`. Checks status, then calls the helpers                                                        |
-| `ScanBundleReader.php`                    | Opens one saved summary or result file: row, file exists, SHA 256 with `hash_equals`, gunzip, JSON. Failures are `ReportRenderFailed` reasons |
-| `ReportData.php`, `HighlightRange.php`    | The result. No fields for match groups, source totals, integrity flags, filtered list or AI (left out on purpose)                          |
-| `SourceListBuilder.php`, `SourceNamer.php` | Ranked sources, percent, category (`Internet` only), name (url host, else title, else `Untitled source`)                                   |
-| `MatchRangeReader.php`, `RangeMerger.php` | Character ranges from a result file as flat int lists, then overlap merge with the best rank                                               |
-| `DetailsMapper.php`                       | Cover details. Dates, file size, pages, characters stay null until feature 21                                                              |
-| `ListedSource.php`, `SourceStat.php`, `WholeNumber.php` | Small readonly data objects and the whole number check                                                                       |
+| File                                                    | Owns                                                                                                                                          |
+| ------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `ReportDataMapper.php`                                  | The only entry point. `map(Scan): ReportData`. Checks status, then calls the helpers                                                          |
+| `ScanBundleReader.php`                                  | Opens one saved summary or result file: row, file exists, SHA 256 with `hash_equals`, gunzip, JSON. Failures are `ReportRenderFailed` reasons |
+| `ReportData.php`, `HighlightRange.php`                  | The result. No fields for match groups, source totals, integrity flags, filtered list or AI (left out on purpose)                             |
+| `SourceListBuilder.php`, `SourceNamer.php`              | Ranked sources, percent, category (`Internet` only), name (url host, else title, else `Untitled source`)                                      |
+| `MatchRangeReader.php`, `RangeMerger.php`               | Character ranges from a result file as flat int lists, then overlap merge with the best rank                                                  |
+| `DetailsMapper.php`                                     | Cover details. Dates, file size, pages, characters stay null until feature 21                                                                 |
+| `ListedSource.php`, `SourceStat.php`, `WholeNumber.php` | Small readonly data objects and the whole number check                                                                                        |
 
 Also: `app/Console/Commands/MapReportData.php` (`report:mapping`), `ScanSummary::resultItems()` and `totalWords()`.
 

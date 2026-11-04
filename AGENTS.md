@@ -51,6 +51,10 @@ php artisan report:sample
 # Check a saved scan without a new Copyleaks call (prints numbers, no manuscript text)
 php artisan report:manuscript {public_id}
 php artisan report:mapping {public_id}
+
+# Scheduled work (routes/console.php, driven by one cron entry running schedule:run each minute)
+# queue:work --stop-when-empty runs every minute; copyleaks:sweep-fetching runs every 5 minutes
+php artisan copyleaks:sweep-fetching
 ```
 
 ## Specs
