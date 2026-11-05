@@ -195,7 +195,7 @@ spec [0009](specs/0009-similarity-cover-page/index.md) · code in `app/Services/
     - [x] Left out rules, shrinking and movable stats box, 8 pt assignment (AC-1 to AC-3)
     - [x] Fitting: one line cuts, 2 line title with the 20 pt shift, escaping (AC-4 to AC-6)
     - [ ] Command finish and safety: `Left out:` line, failure codes, shared pruner, renderer version, folder rule, a look at the sample and a real scan (AC-8 to AC-10) _(built except the folder rule test and the real scan look: no saved scan on this machine)_
-- [ ] Verify it: `/check verify similarity cover page`
+- [x] Verify it: `/check verify similarity cover page`
 - [ ] Test it: `/test similarity cover page`
 
 ### 12. Similarity overview pages

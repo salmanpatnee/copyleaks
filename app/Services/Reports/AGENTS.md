@@ -18,7 +18,7 @@ Turns typed report data into one PDF with mPDF (pure PHP, so it runs on Hostinge
 | `ImportedPdfSection.php`, `PdfImportErrors.php`                                      | Imports each page of a stored PDF at its own size and draws highlights and badges on it. Import errors become `ReportRenderFailed` with a plain reason                                |
 | `SourceRowPager.php`, `PercentFormat.php`, `SourceNameFitter.php`, `SourceColor.php` | Pure helpers: 10 or 14 rows per page, `<1%`, names cut with "…", the 4 color cycle by rank                                                                                            |
 | `Parts/`                                                                             | Readonly data objects the engine takes. A null field leaves its spot out cleanly (a null `SourceRow::$category` skips only the pill)                                                  |
-| `Sample/`                                                                            | Throwaway sample pages and fake data for `php artisan report:sample`. Real cover, overview and highlights come in features 11, 12 and 13                                              |
+| `Sample/`                                                                            | Throwaway sample pages and fake data for `php artisan report:sample`. Real cover, overview and highlights come in features 12 and 13 (the cover is `Cover/`)                          |
 | `NullHttpClient.php`                                                                 | Makes mPDF refuse every web request                                                                                                                                                   |
 
 Also: `app/Enums/MatchGroupStyle.php` (group color, icon, icon size) and `config/report.php`.
@@ -37,6 +37,7 @@ Also: `app/Enums/MatchGroupStyle.php` (group color, icon, icon size) and `config
 
 ```bash
 php artisan report:sample                  # one sample PDF, keeps the newest 5
+php artisan report:cover {public_id}        # cover only PDF from a saved scan, keeps the newest 5
 php artisan report:sample --pages=100 --sources=100 --import=path/to/real.pdf
 ```
 
