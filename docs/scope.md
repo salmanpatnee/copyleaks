@@ -21,7 +21,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 8   | Report PDF engine               | Slice 0    | done        |
 | 9   | Manuscript page rendering       | Slice 0    | in-progress |
 | 10  | Copyleaks to report mapping     | Slice 0    | in-progress |
-| 11  | Similarity cover page           | Slice 0    | planned     |
+| 11  | Similarity cover page           | Slice 0    | in-progress |
 | 12  | Similarity overview pages       | Slice 0    | planned     |
 | 13  | Highlights & margin badges      | Slice 0    | planned     |
 | 14  | Design system & UI foundation   | Foundation | planned     |
@@ -187,8 +187,16 @@ spec [0008](specs/0008-copyleaks-report-mapping/index.md) · code in `app/Servic
 
 The cover page as the design spec describes it, filled with the author, title and assignment from the form, the file name, and any details Copyleaks gives us.
 **Done when:** the cover matches the design spec layout, and any detail we have no data for is left out, with no blanks or guesses.
+spec [0009](specs/0009-similarity-cover-page/index.md) · code in `app/Services/Reports/Cover/`
 
+- [x] Design it (spec): `/architect similarity cover page`
 - [ ] Build it: `/develop similarity cover page`
+    - [ ] Thin thread: real `CoverSection`, factory, first `report:cover`, sample swapped over (AC-1, AC-7 to AC-9)
+    - [ ] Left out rules, shrinking and movable stats box, 8 pt assignment (AC-1 to AC-3)
+    - [ ] Fitting: one line cuts, 2 line title with the 20 pt shift, escaping (AC-4 to AC-6)
+    - [ ] Command finish and safety: `Left out:` line, failure codes, shared pruner, renderer version, folder rule, a look at the sample and a real scan (AC-8 to AC-10)
+- [ ] Verify it: `/check verify similarity cover page`
+- [ ] Test it: `/test similarity cover page`
 
 ### 12. Similarity overview pages
 
