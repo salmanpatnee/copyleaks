@@ -82,6 +82,11 @@ class ReportRenderFailed extends RuntimeException
         return new self('write_failed', 'The finished PDF could not be written to storage.');
     }
 
+    public static function submissionIdMissing(): self
+    {
+        return new self('submission_id_missing', 'The scan has no submission ID, so the report strip cannot be drawn.');
+    }
+
     public static function failed(string $reason = 'render_failed'): self
     {
         return new self($reason, 'The report PDF could not be built.');

@@ -18,7 +18,7 @@ use Throwable;
 class MpdfReportRenderer implements ReportRenderer
 {
     /** Bump when the look changes. Stored with each report. */
-    public const VERSION = '1';
+    public const VERSION = '2';
 
     private const DISK = 'local';
 

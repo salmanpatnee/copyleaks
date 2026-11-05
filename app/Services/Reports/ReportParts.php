@@ -78,22 +78,31 @@ final class ReportParts
         $this->divider($y + 38, ReportTheme::MARGIN_X, ReportTheme::ROW_DIVIDER_END_X - ReportTheme::MARGIN_X);
     }
 
-    /** The grey Pages / Words / Characters box on the cover. Lines with no value are left out. */
-    public function statsBox(DocumentDetails $d): void
+    /**
+     * The grey Pages / Words / Characters box on the cover. Counts that are null or 0 are left out.
+     * Height is 34 pt for one line plus 22 pt for each further line; `$top` is the top of the box.
+     */
+    public function statsBox(DocumentDetails $d, float $top = 470.0): void
     {
         $lines = array_values(array_filter([
-            $d->pages === null ? null : number_format($d->pages).' '.($d->pages === 1 ? 'Page' : 'Pages'),
-            $d->words === null ? null : number_format($d->words).' '.($d->words === 1 ? 'Word' : 'Words'),
-            $d->characters === null ? null : number_format($d->characters).' '.($d->characters === 1 ? 'Character' : 'Characters'),
+            $this->count($d->pages, 'Page', 'Pages'),
+            $this->count($d->words, 'Word', 'Words'),
+            $this->count($d->characters, 'Character', 'Characters'),
         ]));
 
         if ($lines === []) {
             return;
         }
 
-        $this->canvas->view('reports.parts.circle', ['x' => 403, 'y' => 470, 'w' => 89, 'h' => 78, 'r' => 0, 'bg' => ReportTheme::STATS_BG]);
+        $height = 34.0 + 22.0 * (count($lines) - 1);
+        $this->canvas->view('reports.parts.circle', ['x' => 403, 'y' => $top, 'w' => 89, 'h' => $height, 'r' => 0, 'bg' => ReportTheme::STATS_BG]);
         foreach ($lines as $i => $line) {
-            $this->text(415, 484.5 + 22 * $i, $line, 'body semi');
+            $this->text(415, $top + 14.5 + 22 * $i, $line, 'body semi nowrap');
         }
+    }
+
+    private function count(?int $value, string $one, string $many): ?string
+    {
+        return $value === null || $value === 0 ? null : number_format($value).' '.($value === 1 ? $one : $many);
     }
 }

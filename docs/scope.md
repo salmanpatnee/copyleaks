@@ -191,10 +191,10 @@ spec [0009](specs/0009-similarity-cover-page/index.md) · code in `app/Services/
 
 - [x] Design it (spec): `/architect similarity cover page`
 - [ ] Build it: `/develop similarity cover page`
-    - [ ] Thin thread: real `CoverSection`, factory, first `report:cover`, sample swapped over (AC-1, AC-7 to AC-9)
-    - [ ] Left out rules, shrinking and movable stats box, 8 pt assignment (AC-1 to AC-3)
-    - [ ] Fitting: one line cuts, 2 line title with the 20 pt shift, escaping (AC-4 to AC-6)
-    - [ ] Command finish and safety: `Left out:` line, failure codes, shared pruner, renderer version, folder rule, a look at the sample and a real scan (AC-8 to AC-10)
+    - [x] Thin thread: real `CoverSection`, factory, first `report:cover`, sample swapped over (AC-1, AC-7 to AC-9)
+    - [x] Left out rules, shrinking and movable stats box, 8 pt assignment (AC-1 to AC-3)
+    - [x] Fitting: one line cuts, 2 line title with the 20 pt shift, escaping (AC-4 to AC-6)
+    - [ ] Command finish and safety: `Left out:` line, failure codes, shared pruner, renderer version, folder rule, a look at the sample and a real scan (AC-8 to AC-10) _(built except the folder rule test and the real scan look: no saved scan on this machine)_
 - [ ] Verify it: `/check verify similarity cover page`
 - [ ] Test it: `/test similarity cover page`
 

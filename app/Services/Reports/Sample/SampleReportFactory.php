@@ -4,6 +4,7 @@ namespace App\Services\Reports\Sample;
 
 use App\Enums\MatchGroupStyle;
 use App\Enums\ReportKind;
+use App\Services\Reports\Cover\CoverSection;
 use App\Services\Reports\ImportedPdfSection;
 use App\Services\Reports\Parts\DocumentDetails;
 use App\Services\Reports\Parts\Highlight;
@@ -41,7 +42,7 @@ final class SampleReportFactory
         }
 
         $document = new ReportDocument(ReportKind::Similarity, 'trn:oid:::0000:000000001', [
-            new SampleCoverSection($this->details($pages), $this->assets),
+            new CoverSection($this->details($pages), $this->assets),
             new SampleOverviewSection(18.0, $this->groups(), $this->sources($sources), ['Bibliography', 'Quoted Text', 'Small Matches (less than 8 words)'], $this->assets),
             ...$manuscripts,
         ]);

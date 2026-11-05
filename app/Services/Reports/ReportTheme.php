@@ -35,6 +35,8 @@ final class ReportTheme
 
     public const SIZE_SOURCE = 8.0;
 
+    public const SIZE_ASSIGNMENT = 8.0;
+
     public const SIZE_BADGE = 7.75;
 
     public const SIZE_BODY = 7.0;
@@ -109,6 +111,8 @@ final class ReportTheme
         .title { font-family: lexenddeca; font-weight: normal; font-size: {title}pt; line-height: 20pt; }
         .heading { font-weight: bold; font-size: {heading}pt; line-height: 14pt; }
         .source { font-weight: bold; font-size: {source}pt; line-height: 11pt; white-space: nowrap; }
+        .assignment { font-size: {assignment}pt; line-height: 10pt; color: {muted}; }
+        .nowrap { white-space: nowrap; }
         .body { font-size: {body}pt; line-height: 10pt; }
         .small { font-size: {small}pt; line-height: 8pt; }
         .callout { background-color: {info}; border-radius: {radius}pt; color: {calloutText}; font-size: {small}pt; line-height: 8pt; }
@@ -125,6 +129,7 @@ final class ReportTheme
             '{title}' => (string) self::SIZE_TITLE,
             '{heading}' => (string) self::SIZE_HEADING,
             '{source}' => (string) self::SIZE_SOURCE,
+            '{assignment}' => (string) self::SIZE_ASSIGNMENT,
             '{small}' => (string) self::SIZE_SMALL,
             '{info}' => self::INFO_BG,
             '{radius}' => (string) self::CALLOUT_RADIUS,
