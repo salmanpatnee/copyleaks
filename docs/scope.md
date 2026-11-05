@@ -22,7 +22,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 9   | Manuscript page rendering       | Slice 0    | in-progress |
 | 10  | Copyleaks to report mapping     | Slice 0    | in-progress |
 | 11  | Similarity cover page           | Slice 0    | in-progress |
-| 12  | Similarity overview pages       | Slice 0    | planned     |
+| 12  | Similarity overview pages       | Slice 0    | in-progress |
 | 13  | Highlights & margin badges      | Slice 0    | planned     |
 | 14  | Design system & UI foundation   | Foundation | planned     |
 | 15  | Staff login (invite only)       | Slice 1    | planned     |
@@ -202,8 +202,16 @@ spec [0009](specs/0009-similarity-cover-page/index.md) · code in `app/Services/
 
 The overview pages as the design spec describes them: the overall score, the match types and the top sources from Copyleaks, laid out in the same blocks and rows. The source list flows across pages without splitting a row, and the summary block repeats on the second page.
 **Done when:** the pages match the design spec layout, and every number agrees with the saved Copyleaks result.
+spec [0010](specs/0010-similarity-overview-pages/index.md) · code in `app/Services/Reports/Overview/`
 
+- [x] Design it (spec): `/architect similarity overview pages`
 - [ ] Build it: `/develop similarity overview pages`
+    - [ ] Thin thread: real `OverviewSection`, factory, first `report:overview`, sample swapped over (AC-1, AC-9 to AC-11)
+    - [ ] Left out rules: heading only blocks, filters, flag line, `SourceTotals` (AC-2 to AC-4)
+    - [ ] Pages: page 2 score line or repeated summary, later pages, zero source page, escaping (AC-5 to AC-8)
+    - [ ] Command finish and safety: `Left out:` line, failure codes, keep 5, renderer version, folder rule, a look at the sample and a real scan (AC-10 to AC-12)
+- [ ] Verify it: `/check verify similarity overview pages`
+- [ ] Test it: `/test similarity overview pages`
 
 ### 13. Highlights & margin badges
 
