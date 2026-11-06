@@ -6,11 +6,13 @@ use App\Enums\MatchGroupStyle;
 use App\Enums\ReportKind;
 use App\Services\Reports\Cover\CoverSection;
 use App\Services\Reports\ImportedPdfSection;
+use App\Services\Reports\Overview\OverviewSection;
 use App\Services\Reports\Parts\DocumentDetails;
 use App\Services\Reports\Parts\Highlight;
 use App\Services\Reports\Parts\MarginBadge;
 use App\Services\Reports\Parts\MatchGroupRow;
 use App\Services\Reports\Parts\SourceRow;
+use App\Services\Reports\Parts\SourceTotals;
 use App\Services\Reports\ReportAssets;
 use App\Services\Reports\ReportDocument;
 
@@ -43,7 +45,15 @@ final class SampleReportFactory
 
         $document = new ReportDocument(ReportKind::Similarity, 'trn:oid:::0000:000000001', [
             new CoverSection($this->details($pages), $this->assets),
-            new SampleOverviewSection(18.0, $this->groups(), $this->sources($sources), ['Bibliography', 'Quoted Text', 'Small Matches (less than 8 words)'], $this->assets),
+            new OverviewSection(
+                18.0,
+                $rows = $this->sources($sources),
+                $this->assets,
+                $this->groups(),
+                $this->totals($rows),
+                ['Bibliography', 'Quoted Text', 'Small Matches (less than 8 words)'],
+                0,
+            ),
             ...$manuscripts,
         ]);
 
@@ -94,6 +104,23 @@ final class SampleReportFactory
         }
 
         return $rows;
+    }
+
+    /** @param  list<SourceRow>  $rows  the made up totals: a plain sum per sample category */
+    private function totals(array $rows): SourceTotals
+    {
+        $sum = static function (string $category) use ($rows): float {
+            $total = 0.0;
+            foreach ($rows as $row) {
+                if ($row->category === $category) {
+                    $total += $row->percent;
+                }
+            }
+
+            return $total;
+        };
+
+        return new SourceTotals($sum('Internet'), $sum('Publication'), $sum('Student papers'));
     }
 
     private function day(int $rank): string

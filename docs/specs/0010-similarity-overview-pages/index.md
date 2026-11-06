@@ -1,7 +1,7 @@
 # 0010. Similarity overview pages
 
 **Date**: 2026-11-05
-**Status**: Proposed
+**Status**: In Progress
 
 ## Summary
 

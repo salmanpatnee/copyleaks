@@ -50,6 +50,8 @@ php artisan report:sample
 
 # Build a cover only PDF from a saved scan (no Copyleaks call, keeps the newest 5)
 php artisan report:cover {public_id}
+# Build a cover plus overview PDF from a saved scan (no Copyleaks call, keeps the newest 5)
+php artisan report:overview {public_id}
 
 # Check a saved scan without a new Copyleaks call (prints numbers, no manuscript text)
 php artisan report:manuscript {public_id}
@@ -96,6 +98,7 @@ MCP servers: shadcn-vue (recommended)
 - [app/Services/Reports/AGENTS.md](app/Services/Reports/AGENTS.md): report PDF engine on mPDF, sections, theme, imported pages and the sample command
 - [app/Services/Reports/Manuscript/AGENTS.md](app/Services/Reports/Manuscript/AGENTS.md): manuscript pages (original or text mode), word matching, thresholds, the check command and the smalot matrix gotcha
 - [app/Services/Reports/Cover/AGENTS.md](app/Services/Reports/Cover/AGENTS.md): similarity cover page, left out rules, text fitting and the `report:cover` command
+- [app/Services/Reports/Overview/AGENTS.md](app/Services/Reports/Overview/AGENTS.md): overview pages, source list paging, left out blocks and the `report:overview` command
 - [app/Services/Reports/Mapping/AGENTS.md](app/Services/Reports/Mapping/AGENTS.md): saved scan to typed `ReportData` (score, ranked sources, merged highlight ranges), reason codes and the `report:mapping` command
 
 <!-- Nested AGENTS.md files are listed here as they are created -->

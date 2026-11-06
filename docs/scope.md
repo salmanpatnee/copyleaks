@@ -206,11 +206,11 @@ spec [0010](specs/0010-similarity-overview-pages/index.md) · code in `app/Servi
 
 - [x] Design it (spec): `/architect similarity overview pages`
 - [ ] Build it: `/develop similarity overview pages`
-    - [ ] Thin thread: real `OverviewSection`, factory, first `report:overview`, sample swapped over (AC-1, AC-9 to AC-11)
-    - [ ] Left out rules: heading only blocks, filters, flag line, `SourceTotals` (AC-2 to AC-4)
-    - [ ] Pages: page 2 score line or repeated summary, later pages, zero source page, escaping (AC-5 to AC-8)
-    - [ ] Command finish and safety: `Left out:` line, failure codes, keep 5, renderer version, folder rule, a look at the sample and a real scan (AC-10 to AC-12)
-- [ ] Verify it: `/check verify similarity overview pages`
+    - [x] Thin thread: real `OverviewSection`, factory, first `report:overview`, sample swapped over (AC-1, AC-9 to AC-11)
+    - [x] Left out rules: heading only blocks, filters, flag line, `SourceTotals` (AC-2 to AC-4)
+    - [x] Pages: page 2 score line or repeated summary, later pages, zero source page, escaping (AC-5 to AC-8)
+    - [ ] Command finish and safety: `Left out:` line, failure codes, keep 5, renderer version, folder rule, a look at the sample and a real scan (AC-10 to AC-12) _(built except the folder rule test and the real scan look: no saved scan on this machine)_
+- [x] Verify it: `/check verify similarity overview pages`
 - [ ] Test it: `/test similarity overview pages`
 
 ### 13. Highlights & margin badges
