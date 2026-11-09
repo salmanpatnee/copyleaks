@@ -6,16 +6,17 @@ The records behind the tool: a submission (the upload and its cover details) has
 
 ## Key files
 
-| File                                                                 | Owns                                                    |
-| -------------------------------------------------------------------- | ------------------------------------------------------- |
-| `database/migrations/2026_10_31_000000_create_submission_tables.php` | The five tables, with unique keys, indexes and cascades |
-| `app/Models/Submission.php`                                          | `public_id` ULID, `latestScan`, derived `status`        |
-| `app/Models/Scan.php`                                                | One Copyleaks attempt. `status` is not fillable         |
-| `app/Enums/ScanStatus.php`                                           | The allowed move table (`canMoveTo()`, `allowedFrom()`) |
-| `app/Services/ScanTransitioner.php`                                  | The only place a scan status changes                    |
-| `app/Services/ReportReplacer.php`                                    | Safe report rebuild (write new, switch row, delete old) |
-| `app/Actions/DeleteSubmission.php`                                   | Hard delete: rows first, then files                     |
-| `database/factories/`                                                | Row only factories. They never call Copyleaks           |
+| File                                                                             | Owns                                                                    |
+| -------------------------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| `database/migrations/2026_10_31_000000_create_submission_tables.php`             | The five tables, with unique keys, indexes and cascades                 |
+| `database/migrations/2026_11_09_000000_add_submission_number_to_submissions.php` | `submission_number`: backfill with plain code, then required and unique |
+| `app/Models/Submission.php`                                                      | `public_id` ULID, `latestScan`, derived `status`                        |
+| `app/Models/Scan.php`                                                            | One Copyleaks attempt. `status` is not fillable                         |
+| `app/Enums/ScanStatus.php`                                                       | The allowed move table (`canMoveTo()`, `allowedFrom()`)                 |
+| `app/Services/ScanTransitioner.php`                                              | The only place a scan status changes                                    |
+| `app/Services/ReportReplacer.php`                                                | Safe report rebuild (write new, switch row, delete old)                 |
+| `app/Actions/DeleteSubmission.php`                                               | Hard delete: rows first, then files                                     |
+| `database/factories/`                                                            | Row only factories. They never call Copyleaks                           |
 
 ## Conventions
 
@@ -33,6 +34,7 @@ The records behind the tool: a submission (the upload and its cover details) has
 - Database cascade does not remove files. Delete through `DeleteSubmission`, which also refuses while a scan is running.
 - `scans.webhook_token_hash` is hidden and must never be logged or sent to the browser.
 - Same file checksum on many submissions is allowed on purpose (a plain index, not unique).
+- `submissions.submission_number` is our printed Submission ID number (unique, random 9 digits). It is not fillable: `StoreSubmission` sets it with `forceFill`, tests use the factory or `forceCreate`. `character_count` stays unused on purpose.
 - `submissions.page_count` is null for Word files (unknown). `Submission::isWord()` tells them apart. Handle null in every feature that reads it.
 - `reports.manuscript_mode` and `manuscript_fallback_reason` are nullable strings with enum casts (`ManuscriptMode`, `ManuscriptFallbackReason`), both null when no outcome was given. Set only through `ReportReplacer` (spec 0007).
 - Tests use in memory sqlite with foreign keys on. Keep the cascade test that fails if they are off.

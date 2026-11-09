@@ -6,18 +6,19 @@ The upload screen takes a PDF or Word (.docx) file with author, title and assign
 
 ## Key files
 
-| File                                                    | Owns                                                                                     |
-| ------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
-| `app/Services/Manuscripts/ManuscriptInspector.php`      | Interface: `accepts()` reads the first bytes, `inspect()` returns type and page count    |
-| `app/Services/Manuscripts/PdfInspector.php`             | Cheap page count first, then one `smalot/pdfparser` parse. Max 100 pages                 |
-| `app/Services/Manuscripts/DocxInspector.php`            | Reads the zip file list only, never unpacks                                              |
-| `app/Services/Manuscripts/ManuscriptInspectorChain.php` | Gives the file to the first inspector that accepts it. Bound in `AppServiceProvider`     |
-| `app/Http/Requests/StoreSubmissionRequest.php`          | Rules, messages, and the inspection inside `after()`. Keeps the result for the action    |
-| `app/Actions/StoreSubmission.php`                       | ULID first, hash and size from the temp file, write file, save row, clean up on failure  |
-| `app/Http/Controllers/SubmissionController.php`         | `create`, `store`, `show`. Show sends an explicit array, never the model                 |
-| `bootstrap/app.php`                                     | Oversized post and rate limit errors turned into errors on the `file` field              |
-| `resources/js/pages/submissions/`                       | `Create.vue` and `Show.vue`, shown inside `layouts/GuestLayout.vue` (picked in `app.ts`) |
-| `tests/Fixtures/`                                       | Small PDFs and files for the rejection tests                                             |
+| File                                                     | Owns                                                                                                                             |
+| -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `app/Services/Manuscripts/ManuscriptInspector.php`       | Interface: `accepts()` reads the first bytes, `inspect()` returns type and page count                                            |
+| `app/Services/Manuscripts/PdfInspector.php`              | Cheap page count first, then one `smalot/pdfparser` parse. Max 100 pages                                                         |
+| `app/Services/Manuscripts/DocxInspector.php`             | Reads the zip file list only, never unpacks                                                                                      |
+| `app/Services/Manuscripts/ManuscriptInspectorChain.php`  | Gives the file to the first inspector that accepts it. Bound in `AppServiceProvider`                                             |
+| `app/Http/Requests/StoreSubmissionRequest.php`           | Rules, messages, and the inspection inside `after()`. Keeps the result for the action                                            |
+| `app/Services/Manuscripts/SubmissionNumberGenerator.php` | Random free 9 digit `submission_number`, 5 tries, then `SubmissionNumberUnavailable`                                             |
+| `app/Actions/StoreSubmission.php`                        | ULID and number first, hash and size from the temp file, write file, save row (number set with `forceFill`), clean up on failure |
+| `app/Http/Controllers/SubmissionController.php`          | `create`, `store`, `show`. Show sends an explicit array, never the model                                                         |
+| `bootstrap/app.php`                                      | Oversized post and rate limit errors turned into errors on the `file` field                                                      |
+| `resources/js/pages/submissions/`                        | `Create.vue` and `Show.vue`, shown inside `layouts/GuestLayout.vue` (picked in `app.ts`)                                         |
+| `tests/Fixtures/`                                        | Small PDFs and files for the rejection tests                                                                                     |
 
 ## Conventions
 

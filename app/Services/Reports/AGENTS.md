@@ -31,7 +31,7 @@ Also: `app/Enums/MatchGroupStyle.php` (group color, icon, icon size) and `config
 - A section that writes more pages than its `pageCount()` fails with `overflow`. mPDF's own auto page break is off.
 - Draw order on an imported page is fixed: the page, highlights (multiply at 80%), badges, then the strip.
 - mPDF knows only regular and bold. In views `font-weight: bold` means SemiBold.
-- No new `.env` values. Needs PHP `mbstring`, `gd` and `zlib`.
+- Two optional `.env` values: `REPORT_ID_PREFIX` (default `trn:oid:::`) and `REPORT_ID_ACCOUNT` (default `3117`) build the printed Submission ID (config `report.id_prefix`, `report.id_account`). Needs PHP `mbstring`, `gd` and `zlib`.
 
 ## Commands
 
