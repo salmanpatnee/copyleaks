@@ -25,5 +25,17 @@ final readonly class ReportData
         public array $sourceStats,
         public array $ranges,
         public MatchGroupStyle $highlightStyle = MatchGroupStyle::NotCitedOrQuoted,
+        public int $largestRangeEnd = 0,
+        public int $textLength = 0,
     ) {}
+
+    public function droppedRanges(): int
+    {
+        return array_sum(array_map(fn (SourceStat $s): int => $s->droppedRanges, $this->sourceStats));
+    }
+
+    public function clippedRanges(): int
+    {
+        return array_sum(array_map(fn (SourceStat $s): int => $s->clippedRanges, $this->sourceStats));
+    }
 }

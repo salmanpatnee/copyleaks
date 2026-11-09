@@ -41,16 +41,18 @@ class MapReportData extends Command
         foreach ($data->sources as $i => $row) {
             $stat = $data->sourceStats[$i];
             $this->line(sprintf(
-                '  #%d [%s] %s  %s%%  %d words  %d ranges',
+                '  #%d [%s] %s  %s%%  %d words  %s',
                 $row->rank,
                 $row->category ?? 'no category',
                 $row->name,
                 number_format($row->percent, 2),
                 $stat->matchedWords,
-                $stat->rangeCount,
+                $stat->rangeCount === 0 && $stat->droppedRanges > 0
+                    ? "0 ranges ({$stat->droppedRanges} dropped past text end)"
+                    : "{$stat->rangeCount} ranges",
             ));
 
-            if (! $stat->hasId || $stat->rangeCount === 0) {
+            if (! $stat->hasId || ($stat->rangeCount === 0 && $stat->droppedRanges === 0)) {
                 $this->warn("  warning: source #{$row->rank} has matched words but ".($stat->hasId ? '0 ranges.' : 'no id.'));
             }
         }
@@ -62,6 +64,10 @@ class MapReportData extends Command
 
         $this->line('Merged ranges: '.count($data->ranges));
         $this->line('Largest merged range: '.$longest.' characters');
+
+        $this->line("Trimmed ranges: {$data->droppedRanges()} dropped, {$data->clippedRanges()} clipped");
+        $this->line("Largest range end: {$data->largestRangeEnd}");
+        $this->line("Text length: {$data->textLength}");
 
         return self::SUCCESS;
     }

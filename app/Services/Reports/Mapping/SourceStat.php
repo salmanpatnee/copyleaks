@@ -10,5 +10,7 @@ final readonly class SourceStat
         public int $matchedWords,
         public int $rangeCount,
         public bool $hasId,
+        public int $droppedRanges = 0,
+        public int $clippedRanges = 0,
     ) {}
 }

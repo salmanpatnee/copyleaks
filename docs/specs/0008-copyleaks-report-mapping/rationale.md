@@ -75,3 +75,18 @@ Smaller calls made while writing (the engineer's answers fixed the rest):
 **Practices & standards**:
 - Never guess data a source does not give: leave the spot out.
 - Deterministic mapping from stored raw data, so a report rebuilds without a new scan.
+
+## Amendment 2026-11-06: trim out of range offsets (AC-15)
+
+**Why**: the first real scan (`01m6r5zeknm76rjnwzhvtss60e`, a one page PDF with 3,287 text units) had 8 of 38 sources reporting character ranges past the end of the text (largest end 10,324). All 10 merged ranges came from the same files, and 9 of them started past the text end, so the similarity report (spec 0011) printed `Unplaced ranges: 9` and drew one badge.
+
+**Options**:
+1. Drop only ranges that end past the text. Simple, but it also throws away the part that is inside the text. On the real scan it left a range of 80 to 3224 instead of 80 to 3287.
+2. Clip ranges that start inside the text, drop those that start past it (chosen). Keeps every valid word and removes only the impossible part.
+3. Leave it to the report step (spec 0011 already counts them as unplaced). Works, but the numbers look like a placement bug and the merge keeps phantom ranges that can hide real structure.
+
+**Checked on the real files** (no new scan): keeping everything gives 10 ranges; dropping gives 1 range (80 + 3144); clipping gives 1 range (80 + 3207). The page looks the same either way, because the one real range already covered the matched text. The fix changes the counts and keeps the data clean, not the picture.
+
+**Unit**: `CrawledText::length()` counts UTF-16 code units, the unit of the offsets (spec 0007). A character count would be wrong after an emoji.
+
+**Not changed**: the merge rule and one badge per merged range. A badge per change of best source is a separate product choice, not part of this fix.

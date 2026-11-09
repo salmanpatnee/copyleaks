@@ -43,7 +43,7 @@ function matchesAt(array $pairs): array
  * @param  array<string, list<array<string, mixed>>>  $groups
  * @param  array<string, array<string, mixed>>  $results
  */
-function completedScan(array $groups = [], array $results = [], int $totalWords = 1000, float|string|null $score = 12.456, array $submission = []): Scan
+function completedScan(array $groups = [], array $results = [], int $totalWords = 1000, float|string|null $score = 12.456, array $submission = [], int $textLength = 100000): Scan
 {
     $scan = scanFor(pdfSubmission($submission), ScanStatus::Completed);
     $summary = [
@@ -51,6 +51,7 @@ function completedScan(array $groups = [], array $results = [], int $totalWords 
         'results' => ['score' => ['aggregatedScore' => $score], ...$groups],
     ];
     saveArtifact($scan, 'summary', '', json_encode($summary));
+    saveArtifact($scan, 'text', '', json_encode(['text' => ['value' => str_repeat('a', $textLength)]]));
 
     foreach ($results as $id => $body) {
         saveArtifact($scan, 'result', $id, json_encode($body));
@@ -233,11 +234,11 @@ it('maps 300 sources under 128 MB (AC-14)', function () {
 
 it('maps one big result file under 128 MB (AC-14)', function () {
     $count = 300000;
-    $starts = range(0, $count * 20 - 1, 20);
+    $starts = range(0, $count * 2 - 1, 2);
     $body = matchesAt([]);
-    $body['text']['comparison']['identical']['suspected']['chars'] = ['starts' => $starts, 'lengths' => array_fill(0, $count, 5)];
+    $body['text']['comparison']['identical']['suspected']['chars'] = ['starts' => $starts, 'lengths' => array_fill(0, $count, 1)];
     $body['padding'] = array_fill(0, 100000, 'x');
-    $scan = completedScan(['internet' => [item('big', 5)]], ['big' => $body]);
+    $scan = completedScan(['internet' => [item('big', 5)]], ['big' => $body], textLength: 700000);
     unset($body, $starts);
     gc_collect_cycles();
     memory_reset_peak_usage();

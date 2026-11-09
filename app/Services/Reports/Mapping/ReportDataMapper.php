@@ -6,6 +6,7 @@ use App\Enums\ScanStatus;
 use App\Exceptions\ReportRenderFailed;
 use App\Models\Scan;
 use App\Services\Copyleaks\ScanSummary;
+use App\Services\Reports\Manuscript\CrawledTextReader;
 use App\Services\Reports\Parts\SourceRow;
 
 /**
@@ -20,6 +21,8 @@ class ReportDataMapper
         private MatchRangeReader $rangeReader,
         private RangeMerger $merger,
         private DetailsMapper $details,
+        private CrawledTextReader $textReader,
+        private RangeTrimmer $trimmer,
     ) {}
 
     public function map(Scan $scan): ReportData
@@ -37,17 +40,27 @@ class ReportDataMapper
             throw ReportRenderFailed::summaryUnreadable();
         }
 
+        // Only the length of the text is kept, never the text itself (AC-15).
+        $textLength = ($this->textReader->read($scan) ?? throw ReportRenderFailed::crawledTextMissing())->length();
+
         $sources = $this->sourceList->build($summary, $totalWords);
         unset($summary);
 
         $starts = $lengths = $ranks = [];
         $stats = [];
+        $largestEnd = 0;
 
         foreach ($sources as $source) {
-            $count = 0;
+            $count = $dropped = $clipped = 0;
 
             if ($source->id !== null) {
-                $found = $this->rangeReader->read($this->bundle->result($scan, $source->id));
+                $found = $this->trimmer->trim(
+                    ...$this->rangeReader->read($this->bundle->result($scan, $source->id)),
+                    textLength: $textLength,
+                );
+                $dropped = $found['dropped'];
+                $clipped = $found['clipped'];
+                $largestEnd = max($largestEnd, $found['largestEnd']);
                 $count = count($found['starts']);
 
                 foreach ($found['starts'] as $i => $start) {
@@ -58,7 +71,7 @@ class ReportDataMapper
                 unset($found);
             }
 
-            $stats[] = new SourceStat($source->rank, $source->matchedWords, $count, $source->id !== null);
+            $stats[] = new SourceStat($source->rank, $source->matchedWords, $count, $source->id !== null, $dropped, $clipped);
         }
 
         return new ReportData(
@@ -68,6 +81,8 @@ class ReportDataMapper
             sources: array_map(fn (ListedSource $s): SourceRow => new SourceRow($s->rank, $s->category, $s->name, $s->percent), $sources),
             sourceStats: $stats,
             ranges: $this->merger->merge($starts, $lengths, $ranks),
+            largestRangeEnd: $largestEnd,
+            textLength: $textLength,
         );
     }
 }
