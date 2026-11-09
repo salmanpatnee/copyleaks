@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
  *
  * @property int $id
  * @property string $public_id
+ * @property int|null $submission_number
  * @property int|null $user_id
  * @property string $author
  * @property string $title

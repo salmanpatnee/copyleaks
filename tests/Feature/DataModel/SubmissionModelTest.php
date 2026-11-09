@@ -29,8 +29,8 @@ it('gives each new submission its own public id when none is supplied (AC-1)', f
     $attributes = Submission::factory()->make()->getAttributes();
     unset($attributes['public_id']);
 
-    $a = Submission::query()->create($attributes);
-    $b = Submission::query()->create([...$attributes, 'file_sha256' => hash('sha256', 'other')]);
+    $a = Submission::query()->forceCreate($attributes);
+    $b = Submission::query()->forceCreate([...$attributes, 'submission_number' => $attributes['submission_number'] + 1, 'file_sha256' => hash('sha256', 'other')]);
 
     expect($a->public_id)->toHaveLength(26)
         ->and($b->public_id)->toHaveLength(26)

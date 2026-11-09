@@ -13,6 +13,12 @@ return [
     /** mPDF font cache and scratch files. */
     'temp_dir' => storage_path('app/mpdf'),
 
+    /** Front part of the printed Submission ID. Changing it relabels every report (spec 0012, AC-4). */
+    'id_prefix' => env('REPORT_ID_PREFIX', 'trn:oid:::'),
+
+    /** Fixed middle number of the printed Submission ID. */
+    'id_account' => env('REPORT_ID_ACCOUNT', '3117'),
+
     /** Samples keep only this many newest files. */
     'sample_keep' => 5,
 

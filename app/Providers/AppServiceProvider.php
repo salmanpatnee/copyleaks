@@ -11,6 +11,7 @@ use App\Services\Manuscripts\ManuscriptInspectorChain;
 use App\Services\Manuscripts\PdfInspector;
 use App\Services\Reports\Manuscript\PdfWordExtractor;
 use App\Services\Reports\Manuscript\SmalotPdfWordExtractor;
+use App\Services\Reports\Mapping\ReportIdFormatter;
 use App\Services\Reports\MpdfReportRenderer;
 use App\Services\Reports\MpdfTextMeasurer;
 use App\Services\Reports\ReportRenderer;
@@ -37,6 +38,11 @@ class AppServiceProvider extends ServiceProvider
             $this->app->make(PdfInspector::class),
             $this->app->make(DocxInspector::class),
         ]));
+
+        $this->app->bind(ReportIdFormatter::class, fn (): ReportIdFormatter => new ReportIdFormatter(
+            (string) config('report.id_prefix'),
+            (string) config('report.id_account'),
+        ));
 
         $this->app->bind(ReportRenderer::class, MpdfReportRenderer::class);
         $this->app->bind(TextMeasurer::class, MpdfTextMeasurer::class);

@@ -4,11 +4,18 @@ namespace App\Services\Reports\Mapping;
 
 use App\Models\Scan;
 use App\Services\Reports\Parts\DocumentDetails;
+use Illuminate\Support\Carbon;
 
-/** Cover facts from the submission and the scan. Dates, size, pages and characters stay null until feature 21 (AC-11). */
+/** Cover facts from the submission (spec 0012). */
 class DetailsMapper
 {
-    public function map(Scan $scan, int $totalWords): DocumentDetails
+    public function __construct(
+        private ReportIdFormatter $ids,
+        private ReportDateFormatter $dates,
+        private FileSizeFormatter $sizes,
+    ) {}
+
+    public function map(Scan $scan, int $totalWords, int $textLength): DocumentDetails
     {
         $submission = $scan->submission;
 
@@ -16,9 +23,14 @@ class DetailsMapper
             author: $this->clean($submission->author),
             title: $this->clean($submission->title),
             assignment: $this->clean($submission->assignment),
-            submissionId: $scan->copyleaks_scan_id,
+            submissionId: $submission->submission_number === null ? null : $this->ids->format($submission->submission_number),
+            submissionDate: $submission->created_at === null ? null : $this->dates->format($submission->created_at),
+            downloadDate: $this->dates->format(Carbon::now()),
             fileName: $this->clean($submission->original_name),
+            fileSize: $this->sizes->format($submission->file_size),
+            pages: ($submission->page_count ?? 0) > 0 ? $submission->page_count : null,
             words: $totalWords,
+            characters: $textLength,
         );
     }
 

@@ -90,9 +90,9 @@ it('maps score, details, ranked sources and merged ranges (AC-1, 3, 4, 5, 11)', 
         ->and($data->details->author)->toBe('Ann')
         ->and($data->details->title)->toBeNull()
         ->and($data->details->fileName)->toBe('paper.pdf')
-        ->and($data->details->submissionId)->toBe($scan->copyleaks_scan_id)
+        ->and($data->details->submissionId)->toBe('trn:oid:::3117:'.$scan->submission->submission_number)
         ->and($data->details->words)->toBe(1000)
-        ->and($data->details->pages)->toBeNull();
+        ->and($data->details->pages)->toBe($scan->submission->page_count);
 
     // a (rank 2) 0..10 and b (rank 1) 5..15 overlap, 50..55 alone, c 100..104 alone.
     expect(array_map(fn ($r) => [$r->start, $r->length, $r->rank], $data->ranges))

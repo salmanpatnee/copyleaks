@@ -22,6 +22,7 @@ class SubmissionFactory extends Factory
 
         return [
             'public_id' => $publicId,
+            'submission_number' => fake()->unique()->numberBetween(100_000_000, 999_999_999),
             'user_id' => null,
             'author' => fake()->name(),
             'title' => fake()->sentence(4),

@@ -5,6 +5,7 @@ namespace App\Actions;
 use App\Exceptions\ManuscriptStorageFailed;
 use App\Models\Submission;
 use App\Services\Manuscripts\InspectedManuscript;
+use App\Services\Manuscripts\SubmissionNumberGenerator;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
@@ -12,10 +13,13 @@ use Throwable;
 /** Saves the file on the private disk, then one submissions row. Never calls Copyleaks. */
 class StoreSubmission
 {
+    public function __construct(private SubmissionNumberGenerator $numbers) {}
+
     /** @param  array{author: string, title: string, assignment: string}  $details */
     public function __invoke(UploadedFile $file, InspectedManuscript $inspected, array $details): Submission
     {
         $publicId = (new Submission)->newUniqueId();
+        $number = $this->numbers->next();
         $folder = "submissions/{$publicId}";
         $name = "manuscript.{$inspected->type->value}";
 
@@ -38,7 +42,7 @@ class StoreSubmission
                 'file_sha256' => $sha256,
                 'page_count' => $inspected->pageCount,
             ]);
-            $submission->forceFill(['public_id' => $publicId])->save();
+            $submission->forceFill(['public_id' => $publicId, 'submission_number' => $number])->save();
         } catch (Throwable $e) {
             $disk->deleteDirectory($folder);
 

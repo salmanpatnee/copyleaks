@@ -77,7 +77,7 @@ class ReportDataMapper
         return new ReportData(
             similarityPercent: $similarity,
             totalWords: $totalWords,
-            details: $this->details->map($scan, $totalWords),
+            details: $this->details->map($scan, $totalWords, $textLength),
             sources: array_map(fn (ListedSource $s): SourceRow => new SourceRow($s->rank, $s->category, $s->name, $s->percent), $sources),
             sourceStats: $stats,
             ranges: $this->merger->merge($starts, $lengths, $ranks),

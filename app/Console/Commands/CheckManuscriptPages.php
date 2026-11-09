@@ -7,6 +7,7 @@ use App\Enums\ScanStatus;
 use App\Exceptions\ReportRenderFailed;
 use App\Models\Submission;
 use App\Services\Reports\Manuscript\ManuscriptPagesBuilder;
+use App\Services\Reports\Mapping\ReportIdFormatter;
 use App\Services\Reports\ReportDocument;
 use App\Services\Reports\ReportRenderer;
 use Illuminate\Console\Command;
@@ -20,7 +21,7 @@ class CheckManuscriptPages extends Command
 
     protected $description = 'Check how a manuscript is matched to its pages (mode, match share, outlined check PDF)';
 
-    public function handle(ManuscriptPagesBuilder $builder, ReportRenderer $renderer): int
+    public function handle(ManuscriptPagesBuilder $builder, ReportRenderer $renderer, ReportIdFormatter $ids): int
     {
         $submission = Submission::query()->where('public_id', (string) $this->argument('public_id'))->first();
         $scan = $submission?->scans()->where('status', ScanStatus::Completed->value)->latest('id')->first();
@@ -37,7 +38,7 @@ class CheckManuscriptPages extends Command
         try {
             $pages = $builder->build($scan);
             $built = $renderer->render(
-                new ReportDocument(ReportKind::Similarity, $scan->copyleaks_scan_id, [$pages->checkSection()]),
+                new ReportDocument(ReportKind::Similarity, $ids->format((int) $submission->submission_number), [$pages->checkSection()]),
                 $target,
             );
         } catch (ReportRenderFailed $e) {

@@ -31,7 +31,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 18  | Failed scan & retry             | Slice 2    | planned     |
 | 19  | Match groups rules              | Slice 3    | planned     |
 | 20  | Source types, names & ranking   | Slice 3    | planned     |
-| 21  | Our own cover details           | Slice 3    | planned     |
+| 21  | Our own cover details           | Slice 3    | in-progress |
 | 22  | Integrity flags                 | Slice 3    | planned     |
 | 23  | AI writing report               | Slice 4    | planned     |
 | 24  | Review & download reports       | Slice 5    | planned     |
@@ -293,8 +293,17 @@ Map Copyleaks source types to our three labels (Internet, Publications, Student 
 
 Our own submission ID, upload and download dates, file size, and page, word and character counts (counted ourselves where Copyleaks does not give them), shown on the cover and in the header and footer.
 **Done when:** the cover shows every detail from the design spec, and the header and footer use our own submission ID.
+spec [0012](specs/0012-our-own-cover-details/index.md) · code in `app/Services/Reports/Mapping/`
 
+- [x] Design it (spec): `/architect our own cover details`
 - [ ] Build it: `/develop our own cover details`
+    - [x] Thin thread: `submission_number` column and backfill, generator, upload saves it, ID formatter and config, new ID on the cover (AC-1, AC-3, AC-4)
+    - [x] Thicken the ID: retry and `SubmissionNumberUnavailable`, `report:manuscript` and the header and footer use it (AC-1, AC-2, AC-9)
+    - [x] Dates: UTC formatter, submission date and download date (AC-5)
+    - [x] Size and counts: file size, pages, characters (AC-6 to AC-8)
+    - [ ] Finish and check all report commands by eye (AC-9, AC-10)
+- [x] Verify it: `/check verify our own cover details`
+- [ ] Test it: `/test our own cover details`
 
 ### 22. Integrity flags · needs a decision
 
