@@ -39,6 +39,11 @@ final class ReportTheme
 
     public const SIZE_BADGE = 7.75;
 
+    /** Badge number sizes for three digit and four or more digit ranks (spec 0011). */
+    public const SIZE_BADGE_3 = 6.0;
+
+    public const SIZE_BADGE_4 = 4.5;
+
     public const SIZE_BODY = 7.0;
 
     public const SIZE_SMALL = 6.0;

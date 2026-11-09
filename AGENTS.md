@@ -57,6 +57,9 @@ php artisan report:overview {public_id}
 php artisan report:manuscript {public_id}
 php artisan report:mapping {public_id}
 
+# Build the full similarity report (cover, overview, highlighted manuscript) from a saved scan (no Copyleaks call, keeps the newest 5)
+php artisan report:similarity {public_id}
+
 # Scheduled work (routes/console.php, driven by one cron entry running schedule:run each minute)
 # queue:work --stop-when-empty runs every minute; copyleaks:sweep-fetching runs every 5 minutes
 php artisan copyleaks:sweep-fetching
@@ -99,6 +102,7 @@ MCP servers: shadcn-vue (recommended)
 - [app/Services/Reports/Manuscript/AGENTS.md](app/Services/Reports/Manuscript/AGENTS.md): manuscript pages (original or text mode), word matching, thresholds, the check command and the smalot matrix gotcha
 - [app/Services/Reports/Cover/AGENTS.md](app/Services/Reports/Cover/AGENTS.md): similarity cover page, left out rules, text fitting and the `report:cover` command
 - [app/Services/Reports/Overview/AGENTS.md](app/Services/Reports/Overview/AGENTS.md): overview pages, source list paging, left out blocks and the `report:overview` command
+- [app/Services/Reports/Highlights/AGENTS.md](app/Services/Reports/Highlights/AGENTS.md): highlights and margin badges, the four badge slots, the full similarity report and the `report:similarity` command
 - [app/Services/Reports/Mapping/AGENTS.md](app/Services/Reports/Mapping/AGENTS.md): saved scan to typed `ReportData` (score, ranked sources, merged highlight ranges), reason codes and the `report:mapping` command
 
 <!-- Nested AGENTS.md files are listed here as they are created -->

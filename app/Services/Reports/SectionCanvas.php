@@ -173,8 +173,13 @@ final class SectionCanvas implements TextMeasurer
         $pillX = $badge->x + $circle + 1.0;
         $this->roundedRect($pillX, $badge->y, 17.7, $circle, 7.75, SourceColor::forRank($badge->rank)->strong);
         $label = (string) $badge->rank;
-        $width = $this->textWidth($label, ReportTheme::SIZE_BADGE, true);
-        $this->text($pillX + (17.7 - $width) / 2, $badge->y + ($circle - ReportTheme::SIZE_BADGE * 1.362) / 2, $label, ReportTheme::SIZE_BADGE, true, ReportTheme::ON_DARK);
+        $size = match (strlen($label)) {
+            1, 2 => ReportTheme::SIZE_BADGE,
+            3 => ReportTheme::SIZE_BADGE_3,
+            default => ReportTheme::SIZE_BADGE_4,
+        };
+        $width = $this->textWidth($label, $size, true);
+        $this->text($pillX + (17.7 - $width) / 2, $badge->y + ($circle - $size * 1.362) / 2, $label, $size, true, ReportTheme::ON_DARK);
     }
 
     private function finishPage(): void

@@ -23,7 +23,7 @@ _These are recommendations to keep your build orderly, not requirements. Skip an
 | 10  | Copyleaks to report mapping     | Slice 0    | in-progress |
 | 11  | Similarity cover page           | Slice 0    | in-progress |
 | 12  | Similarity overview pages       | Slice 0    | in-progress |
-| 13  | Highlights & margin badges      | Slice 0    | planned     |
+| 13  | Highlights & margin badges      | Slice 0    | done        |
 | 14  | Design system & UI foundation   | Foundation | planned     |
 | 15  | Staff login (invite only)       | Slice 1    | planned     |
 | 16  | Admin creates staff accounts    | Slice 1    | planned     |
@@ -180,6 +180,7 @@ spec [0008](specs/0008-copyleaks-report-mapping/index.md) · code in `app/Servic
     - [x] Source list: ranked rows, percent, names, Internet pill, nullable category in the engine (AC-4 to AC-7)
     - [x] Highlight ranges: result files, merge and best rank, fixed style (AC-8 to AC-10)
     - [ ] Failures, `report:mapping` command, tests and one look at a real sandbox scan (AC-12 to AC-14) _(all done except the real scan look: no saved scan on this machine)_
+    - [x] Trim out of range offsets to the text length, per source counts and `report:mapping` lines (AC-12, AC-15) _(added 2026-11-06 after the first real scan)_
 - [x] Verify it: `/check verify copyleaks to report mapping`
 - [ ] Test it: `/test copyleaks to report mapping`
 
@@ -217,8 +218,17 @@ spec [0010](specs/0010-similarity-overview-pages/index.md) · code in `app/Servi
 
 Draw highlights and numbered margin badges on the manuscript pages, using the match positions Copyleaks gives us and the colors and shapes from the design spec.
 **Done when:** highlighted text lines up with the right words on every page, and badges sit in the margin without overlapping.
+spec [0011](specs/0011-highlights-and-margin-badges/index.md) · code in `app/Services/Reports/Highlights/`
 
-- [ ] Build it: `/develop highlights & margin badges`
+- [x] Design it (spec): `/architect highlights & margin badges`
+- [x] Build it: `/develop highlights & margin badges`
+    - [x] Thin thread: placer, factory, builder and a first `report:similarity` with highlights and one badge per match (AC-1, AC-2, AC-7, AC-8)
+    - [x] Badge slots: four margin slots, free slot rule, dropped badges (AC-4, AC-5)
+    - [x] Unplaced ranges and big rank numbers (AC-3, AC-6)
+    - [x] Command finish and safety: printed numbers, mode and reason, keep 5, renderer version, forbidden call search (AC-9 to AC-11)
+    - [x] One look at a real small scan (AC-12)
+- [x] Verify it: `/check verify highlights & margin badges`
+- [ ] Test it: `/test highlights & margin badges` (skipped on purpose, marked done without it)
 
 ## Foundations, continued
 
