@@ -160,7 +160,7 @@ spec [0007](specs/0007-manuscript-page-rendering/index.md) · code in `app/Servi
 - [x] Design it (spec): `/architect manuscript page rendering`
 - [ ] Build it: `/develop manuscript page rendering`
     - [x] Thin thread: page box, font widths, word boxes, simple matching and `report:manuscript` on the stored sandbox scan (AC-1, AC-2, AC-8)
-    - [ ] Proof on 3 real sandbox PDFs and the emoji file, findings in `rationale.md` (AC-10, AC-12)
+    - [x] Proof on 3 real sandbox PDFs and the emoji file, findings in `rationale.md` (AC-10, AC-12) _(closed 2026-11-09: reran on the saved scans and looked at pages in the browser, see `rationale.md`. Left open on purpose: the emoji offset unit (AC-10) needs a real scan with a match after an emoji, and the Word and Chrome scans are gone)_
     - [x] Re anchor pages by search (not Copyleaks page starts), clean up, resync, both thresholds, `lineBoxes()` edge rules (AC-2, AC-3, AC-10, AC-13)
     - [x] Checks, stop reasons and text pages fallback (AC-4, AC-5, AC-6)
     - [x] Save the outcome on reports, safety check and the 100 page run (AC-7, AC-9, AC-11)
@@ -179,7 +179,7 @@ spec [0008](specs/0008-copyleaks-report-mapping/index.md) · code in `app/Servic
     - [x] Thin thread: reader, `ReportData`, score and cover details on a fixture scan (AC-1 to AC-3, AC-11)
     - [x] Source list: ranked rows, percent, names, Internet pill, nullable category in the engine (AC-4 to AC-7)
     - [x] Highlight ranges: result files, merge and best rank, fixed style (AC-8 to AC-10)
-    - [ ] Failures, `report:mapping` command, tests and one look at a real sandbox scan (AC-12 to AC-14) _(all done except the real scan look: no saved scan on this machine)_
+    - [x] Failures, `report:mapping` command, tests and one look at a real sandbox scan (AC-12 to AC-14) _(real scan look done 2026-11-09 on a saved scan: score 97%, 99 sources)_
     - [x] Trim out of range offsets to the text length, per source counts and `report:mapping` lines (AC-12, AC-15) _(added 2026-11-06 after the first real scan)_
 - [x] Verify it: `/check verify copyleaks to report mapping`
 - [ ] Test it: `/test copyleaks to report mapping`
@@ -195,7 +195,7 @@ spec [0009](specs/0009-similarity-cover-page/index.md) · code in `app/Services/
     - [x] Thin thread: real `CoverSection`, factory, first `report:cover`, sample swapped over (AC-1, AC-7 to AC-9)
     - [x] Left out rules, shrinking and movable stats box, 8 pt assignment (AC-1 to AC-3)
     - [x] Fitting: one line cuts, 2 line title with the 20 pt shift, escaping (AC-4 to AC-6)
-    - [ ] Command finish and safety: `Left out:` line, failure codes, shared pruner, renderer version, folder rule, a look at the sample and a real scan (AC-8 to AC-10) _(built except the folder rule test and the real scan look: no saved scan on this machine)_
+    - [x] Command finish and safety: `Left out:` line, failure codes, shared pruner, renderer version, folder rule, a look at the sample and a real scan (AC-8 to AC-10) _(real scan looked at 2026-11-09; folder rule checked by search, the architecture test is left for `/test`)_
 - [x] Verify it: `/check verify similarity cover page`
 - [ ] Test it: `/test similarity cover page`
 
@@ -210,7 +210,7 @@ spec [0010](specs/0010-similarity-overview-pages/index.md) · code in `app/Servi
     - [x] Thin thread: real `OverviewSection`, factory, first `report:overview`, sample swapped over (AC-1, AC-9 to AC-11)
     - [x] Left out rules: heading only blocks, filters, flag line, `SourceTotals` (AC-2 to AC-4)
     - [x] Pages: page 2 score line or repeated summary, later pages, zero source page, escaping (AC-5 to AC-8)
-    - [ ] Command finish and safety: `Left out:` line, failure codes, keep 5, renderer version, folder rule, a look at the sample and a real scan (AC-10 to AC-12) _(built except the folder rule test and the real scan look: no saved scan on this machine)_
+    - [x] Command finish and safety: `Left out:` line, failure codes, keep 5, renderer version, folder rule, a look at the sample and a real scan (AC-10 to AC-12) _(real scan looked at 2026-11-09; folder rule checked by search, the architecture test is left for `/test`)_
 - [x] Verify it: `/check verify similarity overview pages`
 - [ ] Test it: `/test similarity overview pages`
 

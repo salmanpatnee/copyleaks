@@ -5,7 +5,7 @@ _Steps derived from spec 0006 acceptance criteria. `/check verify` runs these; `
 - [x] Open the newest `storage/app/private/reports/samples/sample-*.pdf` next to a Turnitin sample → cover, overview and source list look the same in layout, fonts and colors   → AC-7
 - [x] On the A4 page and the Letter page, the highlight sits on the text line and the badge sits in the left margin, and the text stays readable under the highlight   → AC-7, AC-8
 - [x] Run `report:sample` with `--import=` for one Word PDF, one Google Docs PDF and one Chrome PDF → each imports, or fails with a plain reason   → AC-8
-- [ ] Run it on an encrypted PDF and on a landscape or rotated PDF → encrypted gives `encrypted_pdf`; landscape keeps its landscape size   → AC-8 _(skipped 2026-11-02 by choice: landscape passed, encrypted and rotated not tried)_
+- [x] Run it on an encrypted PDF and on a landscape or rotated PDF → encrypted gives `encrypted_pdf`; landscape keeps its landscape size   → AC-8 _(run 2026-11-09: encrypted gave `encrypted_pdf` with exit 1 and no temp file; landscape kept 792 × 612; a page with `/Rotate 90` came out 612 × 792 as shown. Highlight position on a rotated page not checked by eye)_
 - [x] Run `report:sample --pages=100 --sources=100` on the target machine → under 512 MB and 240 s; write the numbers in `rationale.md`   → AC-12
 - [ ] Replace the temporary logo with ours, rebuild, and search the PDF text and metadata for "turnitin" → none found   → AC-10
 

@@ -81,6 +81,16 @@ What the proof showed:
 - **`smalot/pdfparser` drops the font and size for text shown with the `'` operator.** The hand made sandbox PDF uses it. The extractor reuses the last font, or the page's first `Tf`. Word, Google Docs and Chrome use `Tj` and `TJ`.
 - **The offset unit could not be confirmed.** The sandbox returns the same fixed sample result file (same source id) for every scan, so its match offsets don't relate to our text. See the Follow-up in `index.md`.
 
+## Rerun on saved scans (2026-11-09)
+
+Only 4 completed scans are left on this machine; the Word and Chrome ones are gone.
+- **Test Manuscript for Similarity Scan.pdf** (real scan, 97%, 99 sources, 3 pages): original mode, match share 99.12% (pages 99.58%, 99.55%, 98.18%). `report:similarity` gave 13 pages, 96 highlight rectangles, 3 badges, 0 unplaced, 0 dropped. Looked at in the browser (page 11 only, at about 46% zoom): highlights sit on the words, badges sit in the left margin without overlap. The source's own Chrome print header shows above our header on page 11.
+- **sample-manuscript.pdf** (two scans): original mode, 100%.
+- **Report PDF engine Emoji.pdf**: now text mode, reason `low_match`, match share 96.60% (before it was only noted as 96.6%). Same cause as above (guessed widths in the made up test file), so it takes the text pages fallback.
+- Pages 12 and 13 looked at in the browser at 100% zoom (2026-11-09): highlights sit tightly on the words across both pages, with no visible drift or clipped letters, and the highlight on a line that starts mid line ("pleasure of making a daisy-chain", page 13) begins at the right word. One badge (80) sits in the left margin beside it with no overlap. The footer shows our `Page n of N` strip, and the source's own Chrome print header and "Page 3 of 3" footer text are highlighted red too, because Copyleaks matched them as text. This is a by eye check at 100%, not a measured 2 pt check.
+- **Emoji file, real scan (2026-11-09, `COPYLEAKS_SANDBOX=false`, 1 credit):** completed with a 0% score, 0 sources and no match ranges, so the offset unit (AC-10) is still NOT confirmed. The file has no copied text, so nothing could match after the emoji. `report:manuscript` still gives text mode, `low_match`, 96.60%. To confirm AC-10 a real scan needs a file with an emoji first and well known text after it. The saved summary shows the AI check was on and raised a `suspected-ai-text` alert (the AI writing report is feature 23, not built).
+- Not done: a measured 2 pt check, box factor tuning, a Word and a Chrome re run, and the emoji offset unit (needs a real scan with a match after an emoji).
+
 Still to do: rerun all four after the re anchoring, the by eye outline check, box factor tuning (now 0.72 and 0.9, untuned), the mPDF box agreement check, and the 100 page run (AC-11).
 
 ## Rerun and size results (2026-11-02, after the build)

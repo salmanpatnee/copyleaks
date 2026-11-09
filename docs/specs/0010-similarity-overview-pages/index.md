@@ -110,7 +110,7 @@ Tracer Bullet: one thin real thread first (an overview from a saved scan through
 1. Thin thread: create `Overview/OverviewSection` by moving the sample overview as is, with the four optional inputs; `OverviewReportFactory`; a first `report:overview` that maps, renders and prints the path; point `SampleReportFactory` at the real section (blocks filled) and delete `SampleOverviewSection`, satisfies **AC-1**, **AC-9**, **AC-10**, **AC-11**
 2. Thicken the left out rules: heading only Match Groups and Top Sources, closing up the dividers when there is no filter list, no flag line, the `SourceTotals` object, satisfies **AC-2**, **AC-3**, **AC-4**
 3. Thicken the pages: page 2 score line versus repeated summary block, page 2 and later positions, zero source page and message, escaping check, satisfies **AC-5**, **AC-6**, **AC-7**, **AC-8**
-4. Finish the command and safety: `Left out:` line with the fixed names constant, failure codes, keep 5 `overview-*` through `SampleFilePruner`, bump `MpdfReportRenderer::VERSION`, architecture rule for the folder, then look at the sample and at one real saved scan if one exists, satisfies **AC-10**, **AC-11**, **AC-12**
+4. [x] Finish the command and safety (real scan looked at 2026-11-09, folder rule checked by search, architecture test left for `/test`): `Left out:` line with the fixed names constant, failure codes, keep 5 `overview-*` through `SampleFilePruner`, bump `MpdfReportRenderer::VERSION`, architecture rule for the folder, then look at the sample and at one real saved scan if one exists, satisfies **AC-10**, **AC-11**, **AC-12**
 
 ## Consequences
 

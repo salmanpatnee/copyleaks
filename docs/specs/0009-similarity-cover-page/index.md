@@ -105,7 +105,7 @@ Tracer Bullet: one thin real thread first (a cover from a saved scan through the
 1. [x] Thin thread: create `Cover/CoverSection` by moving the sample cover as is, `CoverReportFactory`, and a first `report:cover` that maps, renders and prints the path; point `SampleReportFactory` at the real section and delete `SampleCoverSection`, satisfies **AC-1**, **AC-7**, **AC-8**, **AC-9**
 2. [x] Thicken the left out rules: null, blank and 0 handling for each spot, closing up the field pairs, the shrinking and movable stats box in `ReportParts::statsBox`, the 8 pt assignment class, satisfies **AC-1**, **AC-2**, **AC-3**
 3. [x] Thicken the fitting: `CoverTextFitter` with whitespace collapse and the 98% margin, one line cut for author, assignment and the field values, 2 line title drawn one `nowrap` div per line with the 20 pt shift of everything below, escaping check, satisfies **AC-4**, **AC-5**, **AC-6**
-4. [ ] Finish the command and safety: `submission_id_missing` in the factory, `Left out:` line with the fixed names, failure codes, `SampleFilePruner` shared by both commands (keep 5 each), bump `MpdfReportRenderer::VERSION`, architecture rule for the folder, then look at the sample cover and at one real saved scan if one exists, satisfies **AC-8**, **AC-9**, **AC-10**
+4. [x] Finish the command and safety (real scan looked at 2026-11-09, folder rule checked by search, architecture test left for `/test`): `submission_id_missing` in the factory, `Left out:` line with the fixed names, failure codes, `SampleFilePruner` shared by both commands (keep 5 each), bump `MpdfReportRenderer::VERSION`, architecture rule for the folder, then look at the sample cover and at one real saved scan if one exists, satisfies **AC-8**, **AC-9**, **AC-10**
 
 ## Consequences
 
